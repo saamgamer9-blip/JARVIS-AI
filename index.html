@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#061326">
+<title>JARVIS — Personal Assistant</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 20%,#103d61,#071a31 48%,#020711);color:#e8faff;font:16px system-ui,sans-serif}main{max-width:560px;margin:auto;padding:22px 18px 34px}header{display:flex;justify-content:space-between;align-items:center;color:#45dcff;letter-spacing:3px;font-weight:700}.tag{font-size:11px;border:1px solid #2d9fc8;border-radius:20px;padding:6px 10px}.clock{text-align:center;margin:28px 0 8px;font-size:42px;font-weight:300;letter-spacing:3px}.sub,.status{text-align:center;color:#8fcce0;font-size:12px;letter-spacing:2px}.orb{width:205px;height:205px;border:1px solid #38cfff;border-radius:50%;margin:24px auto;display:grid;place-items:center;box-shadow:0 0 28px #087db866,inset 0 0 30px #087db833;position:relative}.orb:before,.orb:after{content:"";position:absolute;border:1px dashed #38cfff88;border-radius:50%;inset:13px}.orb:after{inset:29px;border-style:solid}.core{width:90px;height:90px;border-radius:50%;border:2px solid #45dcff;display:grid;place-items:center;background:#0b3150;box-shadow:0 0 25px #2acfff88;font-size:28px}.status{color:#45dcff;margin-bottom:20px}.panel{border:1px solid #287da0;border-radius:16px;background:#071b2ddd;padding:15px}label{display:block;color:#9bcfe0;font-size:12px;margin:12px 0 7px}select,input{width:100%;background:#061326;color:#e8faff;border:1px solid #287da0;border-radius:10px;padding:13px;font:inherit}.row{display:flex;gap:9px;margin-top:12px}button{flex:1;background:#0b4265;color:#eafaff;border:1px solid #45dcff;border-radius:12px;padding:13px 9px;font:inherit;font-weight:600}.primary{background:linear-gradient(135deg,#087db5,#124b9c)}#answer{min-height:85px;white-space:pre-wrap;line-height:1.5;margin-top:14px}.note{font-size:11px;color:#83aebe;line-height:1.55;margin-top:14px}.small{font-size:12px;color:#9bcfe0;margin-top:8px}
+</style>
+</head>
+<body><main>
+<header><span>J.A.R.V.I.S.</span><span class="tag">PERSONAL ASSISTANT</span></header>
+<div class="clock" id="clock">--:--:--</div><div class="sub">HARGEISA TIME • SYSTEM ONLINE</div>
+<div class="orb"><div class="core">◉</div></div><div class="status" id="status">READY • AWAITING COMMAND</div>
+<section class="panel">
+<label for="language">LANGUAGE / LUQADDA</label>
+<select id="language"><option value="so-SO">Af-Soomaali</option><option value="en-US">English</option></select>
+<label for="command">YOUR COMMAND / AMARKAAGA</label>
+<input id="command" placeholder="Qor ama ku hadal amarkaaga… / Type or speak">
+<div class="row"><button class="primary" id="mic">🎙 Voice / Cod</button><button id="send">Send / Dir</button></div>
+<div class="row"><button id="read">🔊 Read aloud / Akhri</button><button id="stop">Stop / Jooji</button></div>
+<div id="answer">Salaan! Waxaan ahay JARVIS interface-kaaga. / Hello! I am your JARVIS interface.</div>
+<div class="small" id="hint">Microphone works only where browser support and permission are available.</div>
+</section>
+<p class="note">This is the front-end interface only. It does not yet connect to a real AI service or control Android settings. Never publish private API keys in this repository.</p>
+</main>
+<script>
+const el=id=>document.getElementById(id);
+function updateClock(){el('clock').textContent=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Africa/Mogadishu'}).format(new Date())}
+updateClock();setInterval(updateClock,1000);
+function send(){let q=el('command').value.trim();if(!q){el('answer').textContent='Fadlan amar qor ama ku hadal. / Please type or speak a command.';return}el('answer').textContent='Waan helay amarkaaga: “'+q+'”\\n\\nInterface-ku wuu shaqaynayaa, laakiin adeegga AI-ga dhabta ah weli kuma xirna. / Command received. The real AI service is not connected yet.';el('status').textContent='COMMAND RECEIVED'}
+el('send').onclick=send;
+el('mic').onclick=()=>{let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){el('status').textContent='VOICE INPUT NOT SUPPORTED';el('hint').textContent='Browser-kan ma taageerayo cod-gelin. Fadlan qor amarkaaga.';return}let r=new SR();r.lang=el('language').value;r.onstart=()=>el('status').textContent='LISTENING…';r.onresult=e=>{el('command').value=e.results[0][0].transcript;send()};r.onerror=e=>{el('status').textContent='MICROPHONE ERROR';el('hint').textContent='Hubi oggolaanshaha microphone-ka.'};r.start()};
+el('read').onclick=()=>{if(!('speechSynthesis'in window)){el('status').textContent='VOICE OUTPUT NOT SUPPORTED';return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(el('answer').textContent);u.lang=el('language').value;speechSynthesis.speak(u)};
+el('stop').onclick=()=>{if('speechSynthesis'in window)speechSynthesis.cancel();el('status').textContent='STOPPED'};
+</script></body></html>
