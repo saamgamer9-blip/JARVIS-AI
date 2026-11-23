@@ -5,14 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#051325" />
   <title>JARVIS - Personal AI Assistant</title>
-  <style>
+  <style>.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: linear-gradient(rgba(3, 10, 22, 0.55), rgba(3, 10, 22, 0.65)),
+                      url('IMG-20261119-WA0002.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: jarvisMotion 9s ease-in-out infinite alternate;
+}
+
+@keyframes jarvisMotion {
+    0% {
+        transform: scale(1) translateY(0px);
+        filter: brightness(0.95) contrast(1.05);
+    }
+    50% {
+        transform: scale(1.04) translateY(-6px);
+        filter: brightness(1.08) contrast(1.15);
+    }
+    100% {
+        transform: scale(1.02) translateY(4px);
+        filter: brightness(0.98) contrast(1.1);
+    }
+}
+
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
       font-family: system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at top, #0a2540, #051325 70%);
+      background: background: transparent;
       color: #e6f1ff;
       display: flex;
       justify-content: center;
