@@ -1,32 +1,272 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="so">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#061326"><title>JARVIS — Personal AI Assistant</title>
-<style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#103d61,#071326 48%,#020711);color:#e8faff;font:16px system-ui,sans-serif;display:flex;justify-content:center;padding:22px 14px}
-main{width:100%;max-width:650px}header{text-align:center;margin:10px 0 24px}h1{letter-spacing:4px;margin:0;color:#45dcff}header p,.muted{color:#91b8ca}.orb{width:90px;height:90px;border-radius:50%;border:2px solid #45dcff;margin:18px auto;box-shadow:0 0 28px #087dbd66,inset 0 0 25px #087dbd66;display:grid;place-items:center;font-size:28px}
-.panel{background:#0b1d30;border:1px solid #24516a;border-radius:16px;padding:16px;margin:12px 0}label{display:block;margin:10px 0 6px;color:#bceeff}select,input,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #31566b;background:#071525;color:#e8faff;font:inherit}textarea{min-height:95px;resize:vertical}.row{display:flex;gap:9px;flex-wrap:wrap}button{flex:1;min-width:110px;padding:13px;border-radius:10px;border:1px solid #45dcff;background:#0b4260;color:#e8faff;font-weight:700;font-size:15px}button.primary{background:linear-gradient(135deg,#087dbd,#124b9c)}button:disabled{opacity:.55}.answer{white-space:pre-wrap;line-height:1.55;overflow-wrap:anywhere;min-height:40px}.small{font-size:12px;color:#91b8ca}#status{color:#77e6a4}.history{max-height:260px;overflow:auto}.bubble{padding:10px 12px;border-radius:10px;background:#102b42;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}.bubble.user{background:#123b50}.bubble b{color:#45dcff}
-</style></head>
-<body><main>
-<header><h1>J.A.R.V.I.S.</h1><p>PERSONAL AI ASSISTANT</p><div class="orb">✦</div><div id="clock" class="muted"></div><p id="status">READY · Sugaya AI-ga</p></header>
-<section class="panel">
-<label for="provider">Dooro AI / CHOOSE AI</label><select id="provider"><option value="gemini">Google Gemini</option><option value="openai">ChatGPT (OpenAI)</option></select>
-<label for="language">Luqadda jawaabta</label><select id="language"><option value="auto">Auto — la soco luqaddayda</option><option value="so">Af-Soomaali</option><option value="en">English</option></select>
-<label for="command">Su'aashaada / YOUR COMMAND</label><textarea id="command" placeholder="Qor su'aashaada halkan..."></textarea>
-<div class="row" style="margin-top:10px"><button class="primary" id="send">Dir / Send</button><button id="voice">🎤 Hadal</button><button id="read">🔊 Akhri jawaabta</button></div>
-<p class="small">Cod gelintu waxay ku xiran tahay taageerada browser-ka iyo oggolaanshaha microphone-ka.</p>
-</section>
-<section class="panel"><b>Wadahadalka / CONVERSATION</b><div id="history" class="history"></div><div id="answer" class="answer muted">Jawaabta JARVIS halkan ayay ka muuqanaysaa.</div></section>
-<p class="small">API keys-ka waxaa lagu hayaa server-ka (.env), waligaa ha gelin HTML ama GitHub.</p>
-</main>
-<script>
-const $=id=>document.getElementById(id);let history=[];
-function tick(){$("clock").textContent=new Date().toLocaleString()}tick();setInterval(tick,1000);
-function add(role,content){const d=document.createElement("div");d.className="bubble "+(role==="user"?"user":"");const b=document.createElement("b");b.textContent=role==="user"?"Adiga: ":"JARVIS: ";d.append(b,document.createTextNode(content));$("history").append(d);$("history").scrollTop=$("history").scrollHeight}
-async function send(){const message=$("command").value.trim();if(!message)return;$("send").disabled=true;$("status").textContent="THINKING...";$("answer").textContent="JARVIS wuu fikirayaa...";add("user",message);
-try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:$("provider").value,language:$("language").value,message,history})});const data=await r.json();if(!r.ok)throw new Error(data.error||"Codsi ma guulaysan.");$("answer").textContent=data.answer;add("assistant",data.answer);history.push({role:"user",content:message},{role:"assistant",content:data.answer});history=history.slice(-12);$("command").value="";$("status").textContent="READY · ONLINE"}catch(e){$("answer").textContent=e.message;$("status").textContent="ERROR · Hubi server/API key"}finally{$("send").disabled=false}}
-$("send").addEventListener("click",send);$("command").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey))send()});
-$("read").addEventListener("click",()=>{if(!("speechSynthesis"in window))return alert("Browser-ku ma taageerayo cod-akhris.");speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance($("answer").textContent))});
-$("voice").addEventListener("click",()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return alert("Speech recognition kuma jiro browser-kan. Isku day Chrome.");const rec=new SR();rec.lang=$("language").value==="en"?"en-US":"so-SO";rec.onresult=e=>{$("command").value=e.results[0][0].transcript};rec.onerror=()=>alert("Microphone-ka lama adeegsan karin. Hubi oggolaanshaha.");rec.start()});
-</script></body></html>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#051325" />
+  <title>JARVIS - Personal AI Assistant</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #0a2540, #051325 70%);
+      color: #e6f1ff;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+    main {
+      width: 100%;
+      max-width: 650px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      margin: 0;
+      letter-spacing: 4px;
+      color: #45d0ff;
+    }
+    header p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      opacity: 0.75;
+    }
+    #clock {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #9ad8ff;
+    }
+    .panel {
+      background: #0a1d30;
+      border: 1px solid #24516a;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #9ad8ff;
+    }
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      border-radius: 10px;
+      border: 1px solid #2a5d7a;
+      background: #061422;
+      color: #ffffff;
+      padding: 10px;
+      font-size: 15px;
+      resize: vertical;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .primary {
+      background: #1ea7e1;
+      color: #04121e;
+    }
+    .secondary {
+      background: #14364c;
+      color: #e6f1ff;
+      border: 1px solid #2c6282;
+    }
+    #status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #8fd3ff;
+    }
+    .history {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    .bubble {
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .user {
+      background: #133852;
+      align-self: flex-end;
+      border: 1px solid #2b688c;
+    }
+    .jarvis {
+      background: #092438;
+      align-self: flex-start;
+      border: 1px solid #1d4c68;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>J.A.R.V.I.S.</h1>
+      <p>PERSONAL AI ASSISTANT</p>
+      <div id="clock"></div>
+    </header>
+
+    <section class="panel">
+      <label for="command">Su'aashaada / Amarkaaga</label>
+      <textarea id="command" placeholder="Tusaale: Fur YouTube, Maxaa la yiraahdaa caasimadda Soomaaliya?"></textarea>
+      <div class="row">
+        <button class="primary" id="send">Dir</button>
+        <button class="secondary" id="voice">Cod (Dhagayso)</button>
+        <button class="secondary" id="speakLast">Akhri Jawaabta</button>
+      </div>
+      <div id="status">Diyaar u ah inuu ku caawiyo.</div>
+    </section>
+
+    <section class="panel">
+      <label>Wada-hadalka</label>
+      <div id="history" class="history"></div>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let lastReply = "Waan ku faraxsanahay inaan kula hadlo. Sideen kuu caawin karaa?";
+
+    function updateClock() {
+      $("clock").textContent = new Date().toLocaleString();
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) {
+        $("status").textContent = "Browser-kan ma taageero codka hadla.";
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "so-SO";
+      window.speechSynthesis.speak(utter);
+    }
+
+    function addMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = "bubble " + role;
+      div.textContent = text;
+      $("history").appendChild(div);
+      $("history").scrollTop = $("history").scrollHeight;
+    }
+
+    function checkAppCommand(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes("fur youtube") || lower.includes("open youtube")) {
+        window.open("https://www.youtube.com", "_blank");
+        return "Waxaan furayaa YouTube.";
+      }
+      if (lower.includes("fur google") || lower.includes("open google")) {
+        window.open("https://www.google.com", "_blank");
+        return "Waxaan furayaa Google.";
+      }
+      if (lower.includes("fur whatsapp") || lower.includes("open whatsapp")) {
+        window.open("https://wa.me/", "_blank");
+        return "Waxaan furayaa WhatsApp.";
+      }
+      return null;
+    }
+
+    async function getFreeReply(text) {
+      const appMsg = checkAppCommand(text);
+      if (appMsg) return appMsg;
+
+      const q = text.trim();
+      const lower = q.toLowerCase();
+
+      if (lower.includes("waqti") || lower.includes("saacad") || lower.includes("time")) {
+        return "Waqtigu waa: " + new Date().toLocaleTimeString();
+      }
+      if (lower.includes("taariikh") || lower.includes("date")) {
+        return "Taariikhdu waa: " + new Date().toLocaleDateString();
+      }
+
+      try {
+        const url = "https://api.duckduckgo.com/?q=" + encodeURIComponent(q) + "&format=json&no_html=1";
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.AbstractText) {
+          return data.AbstractText;
+        }
+      } catch (e) {
+        // Haddii xiriirku dib u dhaco
+      }
+
+      return "Waan fahmay amarkaaga: \"" + q + "\". Su'aalaha guud ama furista apps-ka ayaan kaa caawin karaa.";
+    }
+
+    async function handleCommand() {
+      const text = $("command").value.trim();
+      if (!text) return;
+
+      $("command").value = "";
+      addMessage("user", text);
+      $("status").textContent = "JARVIS wuu ka fikirayaa...";
+
+      const reply = await getFreeReply(text);
+      lastReply = reply;
+      addMessage("jarvis", reply);
+      $("status").textContent = "Jawaabta waa la helay.";
+      speak(reply);
+    }
+
+    $("send").addEventListener("click", handleCommand);
+    $("command").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleCommand();
+      }
+    });
+
+    $("speakLast").addEventListener("click", () => {
+      speak(lastReply);
+    });
+
+    $("voice").addEventListener("click", () => {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        $("status").textContent = "Browser-kan ma taageero aqoonsiga codka.";
+        return;
+      }
+      const rec = new SpeechRec();
+      rec.lang = "so-SO";
+      $("status").textContent = "Waan ku dhagaysanayaa... hadal.";
+      rec.onresult = (event) => {
+        const spoken = event.results[0][0].transcript;
+        $("command").value = spoken;
+        $("status").textContent = "Codka waa la qoray.";
+        handleCommand();
+      };
+      rec.onerror = () => {
+        $("status").textContent = "Codka si fiican looma qaban, mar kale isku day.";
+      };
+      rec.start();
+    });
+
+    addMessage("jarvis", "Salaan! Waxaan ahay JARVIS. Waxaad i weydiin kartaa su'aal ama i weydiiso inaan furo YouTube, Google, ama WhatsApp.");
+  </script>
+</body>
+</html>
