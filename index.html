@@ -3,248 +3,450 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sam Gamer Live</title>
+  <title>JARVIS - Gemini Auto</title>
   <style>
     :root {
-      --bg-overlay: rgba(10, 12, 18, 0.8);
-      --text-color: #f8fafc;
-      --accent-color: #38bdf8;
-      --active-color: #f43f5e;
+      --bg-dark: #07090f;
+      --surface: #111521;
+      --surface-2: #181e2e;
+      --border: rgba(255, 255, 255, 0.09);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --listening: #f43f5e;
+      --speaking: #10b981;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
 
     body {
-      background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('sawir.jpg');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: var(--text-color);
+      background: radial-gradient(circle at top, #0f172a 0%, var(--bg-dark) 65%);
+      color: var(--text-main);
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      align-items: center;
-      padding: 20px;
       overflow: hidden;
     }
 
-    header {
-      width: 100%;
-      max-width: 600px;
-      text-align: center;
-      padding: 15px;
-      background: rgba(15, 23, 42, 0.6);
+    /* Top Bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: rgba(7, 9, 15, 0.85);
       backdrop-filter: blur(12px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--border);
     }
 
-    h1 {
-      font-size: 1.5rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, #fff, var(--accent-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
-    #chatArea {
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.3rem;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .model-badge {
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .model-badge span {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--accent);
+      background: var(--surface-2);
+    }
+
+    /* Main Center / Chat Area */
+    #mainArea {
       flex: 1;
-      width: 100%;
-      max-width: 600px;
       overflow-y: auto;
+      padding: 20px 18px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      padding: 20px 0;
+      gap: 14px;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
     }
 
-    #chatArea::-webkit-scrollbar {
+    #mainArea::-webkit-scrollbar {
       width: 4px;
     }
 
-    #chatArea::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
+    #mainArea::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 4px;
     }
 
-    .msg {
-      max-width: 80%;
-      padding: 16px 20px;
-      border-radius: 24px;
-      line-height: 1.5;
-      font-size: 1.05rem;
-      word-break: break-word;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: rgba(30, 41, 59, 0.8);
-      border-bottom-right-radius: 4px;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-    }
-
-    .ai {
-      align-self: flex-start;
-      background: rgba(15, 23, 42, 0.9);
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .controls {
-      width: 100%;
-      max-width: 600px;
+    .hero-empty {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      justify-content: center;
+      text-align: center;
+      gap: 14px;
+      padding: 24px 10px;
+      user-select: none;
     }
 
-    .key-box {
+    .sparkle {
+      font-size: 2.3rem;
+      background: linear-gradient(135deg, #60a5fa, #c084fc, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.35));
+    }
+
+    .hero-title {
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      color: #f1f5f9;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 13px 17px;
+      border-radius: 18px;
+      line-height: 1.5;
+      font-size: 0.98rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: #1e293b;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-bottom-right-radius: 5px;
+    }
+
+    .msg.ai {
+      align-self: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 5px;
+    }
+
+    /* Bottom Composer Box */
+    .bottom-dock {
+      max-width: 780px;
       width: 100%;
+      margin: 0 auto;
+      padding: 10px 14px 16px;
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      background: rgba(15, 23, 42, 0.8);
-      padding: 10px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    input {
+    .composer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .composer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .key-status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .key-btn {
+      background: var(--surface-2);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .composer-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #promptInput {
       flex: 1;
       background: transparent;
       border: none;
-      padding: 8px 16px;
-      color: #fff;
-      font-size: 1rem;
+      color: var(--text-main);
+      font-size: 0.98rem;
       outline: none;
+      padding: 4px 2px;
     }
 
-    button#saveBtn {
-      background: var(--accent-color);
-      color: #05070e;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
+    #promptInput::placeholder {
+      color: var(--text-muted);
     }
 
-    button#saveBtn:hover {
-      opacity: 0.9;
-    }
-
-    /* Badhanka dhexe ee isku beddelaya */
-    .action-circle {
-      width: 90px;
-      height: 90px;
+    .circle-action {
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: none;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-size: 2.5rem;
+      justify-content: center;
+      font-size: 1.15rem;
       cursor: pointer;
-      background: var(--accent-color);
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    #micBtn {
+      background: var(--surface-2);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    #micBtn.listening {
+      background: var(--listening);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(244, 63, 94, 0.55);
+    }
+
+    #micBtn.speaking {
+      background: var(--speaking);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.55);
+    }
+
+    #sendBtn {
+      background: var(--accent);
       color: #05070e;
-      box-shadow: 0 0 40px var(--accent-color);
-      transition: all 0.3s ease;
+      font-weight: 700;
     }
 
-    .action-circle.listening {
-      background: var(--active-color);
+    /* API Key Modal / Drawer */
+    .key-drawer {
+      display: none;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px 12px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .key-drawer.open {
+      display: flex;
+    }
+
+    #apiKeyInput {
+      flex: 1;
+      background: transparent;
+      border: none;
       color: #fff;
-      box-shadow: 0 0 60px var(--active-color);
-      transform: scale(1.05);
+      font-size: 0.92rem;
+      outline: none;
     }
 
-    .action-circle.speaking {
-      background: #10b981;
-      color: #fff;
-      box-shadow: 0 0 50px #10b981;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+    #saveKeyBtn {
+      background: var(--accent);
+      color: #05070e;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Sam Gamer</h1>
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="icon-btn" id="newChatBtn" title="Wada-hadal cusub">☰</button>
+      <div class="model-badge">Gemini Auto <span>⌄</span></div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="voiceQuickBtn" title="Codka JARVIS">✎</button>
+      <img src="sawir.jpg" alt="JARVIS" class="avatar" onerror="this.style.display='none'">
+    </div>
   </header>
 
-  <main id="chatArea">
-    <div class="msg ai">Salaan! Taabo badhanka hoose si aan u bilowno wada-hadalka.</div>
+  <main id="mainArea">
+    <div class="hero-empty" id="heroEmpty">
+      <div class="sparkle">✦</div>
+      <div class="hero-title">Ask away, JARVIS!</div>
+    </div>
   </main>
 
-  <div class="controls">
-    <div class="key-box">
+  <div class="bottom-dock">
+    <div class="key-drawer" id="keyDrawer">
       <input type="password" id="apiKeyInput" placeholder="Geli Gemini API Key...">
-      <button id="saveBtn">Save</button>
+      <button id="saveKeyBtn">Save</button>
     </div>
-    <button id="mainBtn" class="action-circle">🎙️</button>
+
+    <div class="composer-card">
+      <div class="composer-top">
+        <span class="key-status" id="keyStatusText">API Key Settings • Tap + or Menu</span>
+        <button class="key-btn" id="toggleKeyBtn">API Key</button>
+      </div>
+      <div class="composer-input-row">
+        <input type="text" id="promptInput" placeholder="Try @ for more">
+        <button class="circle-action" id="micBtn" aria-label="Hadalka">🎙️</button>
+        <button class="circle-action" id="sendBtn" aria-label="Dir">➤</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const chatArea = document.getElementById('chatArea');
-    const mainBtn = document.getElementById('mainBtn');
+    const mainArea = document.getElementById('mainArea');
+    const heroEmpty = document.getElementById('heroEmpty');
+    const promptInput = document.getElementById('promptInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const micBtn = document.getElementById('micBtn');
+    const toggleKeyBtn = document.getElementById('toggleKeyBtn');
+    const keyDrawer = document.getElementById('keyDrawer');
     const apiKeyInput = document.getElementById('apiKeyInput');
-    const saveBtn = document.getElementById('saveBtn');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
+    const keyStatusText = document.getElementById('keyStatusText');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const voiceQuickBtn = document.getElementById('voiceQuickBtn');
 
-    apiKeyInput.value = localStorage.getItem('sam_gamer_key') || '';
+    const SYSTEM_PROMPT = "Waxaad tahay JARVIS oo ka tirsan mashruuca Sam Gamer. Si kooban, caqli badan, oo saaxiibtinimo leh uga jawaab af Soomaali marka laguula hadlo.";
+    let conversationHistory = [];
+
+    const savedKey = localStorage.getItem('sam_gamer_key') || '';
+    apiKeyInput.value = savedKey;
+    refreshKeyStatus();
+
+    function refreshKeyStatus() {
+      const hasKey = Boolean((apiKeyInput.value || localStorage.getItem('sam_gamer_key') || '').trim());
+      keyStatusText.textContent = hasKey
+        ? 'API Key saved • Ready for JARVIS'
+        : 'API Key Settings • Tap + or Menu';
+    }
+
+    function toggleKeyDrawer() {
+      keyDrawer.classList.toggle('open');
+      if (keyDrawer.classList.contains('open')) {
+        apiKeyInput.focus();
+      }
+    }
+
+    toggleKeyBtn.addEventListener('click', toggleKeyDrawer);
+    keyStatusText.addEventListener('click', toggleKeyDrawer);
 
     function saveKey() {
       const k = apiKeyInput.value.trim();
-      if (k) {
-        localStorage.setItem('sam_gamer_key', k);
-        apiKeyInput.blur();
-        addMsg('Furahaaga waa la kaydiyay.', 'ai');
-      }
+      if (!k) return;
+      localStorage.setItem('sam_gamer_key', k);
+      refreshKeyStatus();
+      keyDrawer.classList.remove('open');
+      addMsg('Furahaaga API waa la kaydiyay.', 'ai');
     }
-    saveBtn.addEventListener('click', saveKey);
-    apiKeyInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveKey(); });
+
+    saveKeyBtn.addEventListener('click', saveKey);
+    apiKeyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveKey();
+    });
 
     function addMsg(text, type) {
-      const d = document.createElement('div');
-      d.className = 'msg ' + type;
-      d.textContent = text;
-      chatArea.appendChild(d);
-      chatArea.scrollTop = chatArea.scrollHeight;
+      if (heroEmpty) {
+        heroEmpty.style.display = 'none';
+      }
+      const div = document.createElement('div');
+      div.className = 'msg ' + type;
+      div.textContent = text;
+      mainArea.appendChild(div);
+      mainArea.scrollTop = mainArea.scrollHeight;
+      return div;
     }
 
+    newChatBtn.addEventListener('click', () => {
+      conversationHistory = [];
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+      updateButtonState('idle');
+      mainArea.innerHTML = '';
+      mainArea.appendChild(heroEmpty);
+      heroEmpty.style.display = 'flex';
+    });
+
     function updateButtonState(state) {
-      mainBtn.classList.remove('listening', 'speaking');
+      micBtn.classList.remove('listening', 'speaking');
       if (state === 'idle') {
-        mainBtn.textContent = '🎙️';
+        micBtn.textContent = '🎙️';
       } else if (state === 'listening') {
-        mainBtn.classList.add('listening');
-        mainBtn.textContent = '🛑';
+        micBtn.classList.add('listening');
+        micBtn.textContent = '🛑';
       } else if (state === 'speaking') {
-        mainBtn.classList.add('speaking');
-        mainBtn.textContent = '✨';
+        micBtn.classList.add('speaking');
+        micBtn.textContent = '✨';
       }
     }
 
     function speak(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'so-SO';
       updateButtonState('speaking');
-      u.onend = () => updateButtonState('idle');
-      u.onerror = () => updateButtonState('idle');
-      window.speechSynthesis.speak(u);
+      utterance.onend = () => updateButtonState('idle');
+      utterance.onerror = () => updateButtonState('idle');
+      window.speechSynthesis.speak(utterance);
     }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -264,9 +466,9 @@
         }
       };
       rec.onresult = (e) => {
-        const txt = e.results[0][0].transcript;
-        addMsg(txt, 'user');
-        askGemini(txt);
+        const spokenText = e.results[0][0].transcript;
+        addMsg(spokenText, 'user');
+        askGemini(spokenText);
       };
       rec.onerror = () => {
         recording = false;
@@ -274,9 +476,14 @@
       };
     }
 
-    mainBtn.addEventListener('click', () => {
+    function triggerVoice() {
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        updateButtonState('idle');
+        return;
+      }
       if (!rec) {
-        alert('Codka laguma taageero browser-kan.');
+        addMsg('Codka laguma taageero browser-kan.', 'ai');
         return;
       }
       if (recording) {
@@ -286,27 +493,76 @@
       } else {
         rec.start();
       }
+    }
+
+    micBtn.addEventListener('click', triggerVoice);
+    voiceQuickBtn.addEventListener('click', triggerVoice);
+
+    function sendTextPrompt() {
+      const txt = promptInput.value.trim();
+      if (!txt) return;
+      promptInput.value = '';
+      addMsg(txt, 'user');
+      askGemini(txt);
+    }
+
+    sendBtn.addEventListener('click', sendTextPrompt);
+    promptInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendTextPrompt();
     });
 
     async function askGemini(prompt) {
-      const key = apiKeyInput.value.trim();
+      const key = (apiKeyInput.value || localStorage.getItem('sam_gamer_key') || '').trim();
       if (!key) {
-        addMsg('Fadlan geli furahaaga API marka hore.', 'ai');
+        keyDrawer.classList.add('open');
+        addMsg('Fadlan geli furahaaga Gemini API marka hore kadibna riix Save.', 'ai');
         updateButtonState('idle');
         return;
       }
+
+      conversationHistory.push({
+        role: 'user',
+        parts: [{ text: prompt }]
+      });
+
+      const statusMsg = addMsg('JARVIS wuu ka fikirayaa...', 'ai');
+
       try {
-        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
+        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': key
+          },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: SYSTEM_PROMPT }]
+            },
+            contents: conversationHistory
+          })
         });
+
         const data = await res.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Khalad ayaa dhacay.';
-        addMsg(reply, 'ai');
+
+        if (!res.ok) {
+          const apiErr = data.error?.message || 'Cillad API ayaa dhacday.';
+          statusMsg.textContent = 'Khalad: ' + apiErr;
+          conversationHistory.pop();
+          updateButtonState('idle');
+          return;
+        }
+
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Jawaab lama helin.';
+        conversationHistory.push({
+          role: 'model',
+          parts: [{ text: reply }]
+        });
+
+        statusMsg.textContent = reply;
         speak(reply);
       } catch (err) {
-        addMsg('Cillad xidhiidhka ah.', 'ai');
+        statusMsg.textContent = 'Cillad xidhiidhka internet-ka ah ayaa dhacday.';
+        conversationHistory.pop();
         updateButtonState('idle');
       }
     }
