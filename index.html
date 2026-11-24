@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS Live Interface</title>
+  <title>JARVIS Live Voice Assistant</title>
   <style>
     :root {
-      --bg-color: #0c0f12;
+      --bg-color: #0d1117;
       --surface-color: #161b22;
-      --accent-color: #38bdf8;
-      --text-color: #f1f5f9;
-      --text-muted: #94a3b8;
-      --glow-color: rgba(56, 189, 248, 0.3);
+      --text-color: #e6edf3;
+      --accent-color: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.4);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     body {
@@ -30,232 +29,255 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px;
-      overflow: hidden;
     }
 
-    /* Header Section */
     header {
       width: 100%;
-      max-width: 800px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 600px;
+      text-align: center;
+      padding-bottom: 10px;
     }
 
-    .brand h1 {
-      font-size: 1.8rem;
-      letter-spacing: 1px;
-      background: linear-gradient(90deg, #fff, var(--accent-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    header h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-color);
     }
 
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .status-indicator {
-      width: 10px;
-      height: 10px;
-      background-color: #22c55e;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #22c55e;
-    }
-
-    /* Main Chat Display */
-    main {
+    #chatContainer {
       flex: 1;
       width: 100%;
-      max-width: 800px;
+      max-width: 600px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
       padding: 10px 0;
     }
 
     .message {
-      max-width: 75%;
-      padding: 15px;
-      border-radius: 20px;
-      line-height: 1.4;
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
       font-size: 1rem;
+      line-height: 1.4;
     }
 
     .message.user {
       align-self: flex-end;
-      background-color: var(--surface-color);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      background-color: var(--accent-color);
+      color: #0d1117;
+      font-weight: 500;
+      border-bottom-right-radius: 2px;
     }
 
     .message.ai {
       align-self: flex-start;
-      background: linear-gradient(135deg, var(--surface-color), #0f172a);
-      border-left: 4px solid var(--accent-color);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      background-color: var(--surface-color);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom-left-radius: 2px;
     }
 
-    /* Voice Visualiser Simulation */
-    .visualizer-container {
-      width: 100%;
+    /* Voice Visualiser */
+    .visualizer {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 60px;
-      gap: 5px;
+      gap: 6px;
+      height: 40px;
+      margin: 10px 0;
     }
 
-    .bar {
+    .wave-bar {
       width: 4px;
-      height: 20px;
+      height: 12px;
       background-color: var(--accent-color);
       border-radius: 2px;
-      animation: pulse 1.5s infinite ease-in-out;
+      transition: height 0.2s ease;
+    }
+
+    .wave-bar.active {
+      animation: pulse 0.8s infinite ease-in-out alternate;
     }
 
     @keyframes pulse {
-      0%, 100% { height: 15px; opacity: 0.4; }
-      50% { height: 50px; opacity: 1; }
+      0% { height: 12px; }
+      100% { height: 36px; }
     }
 
-    .bar:nth-child(2) { animation-delay: 0.2s; }
-    .bar:nth-child(3) { animation-delay: 0.4s; }
-    .bar:nth-child(4) { animation-delay: 0.6s; }
-    .bar:nth-child(5) { animation-delay: 0.8s; }
-
-    /* Input Controls */
     .controls {
       width: 100%;
-      max-width: 800px;
+      max-width: 600px;
       display: flex;
-      gap: 10px;
+      flex-direction: column;
       align-items: center;
-      background-color: var(--surface-color);
-      padding: 10px 20px;
-      border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 15px;
+      padding-top: 10px;
     }
 
-    input[type="text"] {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text-color);
-      padding: 10px;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    button {
+    #voiceBtn {
       background-color: var(--accent-color);
-      color: #000;
+      color: #0d1117;
       border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px var(--glow-color);
-    }
-
-    .mic-btn {
-      background-color: #ef4444;
-      color: #fff;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
-      width: 45px;
-      height: 45px;
+      font-size: 1.8rem;
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.2rem;
+      box-shadow: 0 0 15px var(--accent-glow);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    #voiceBtn:hover {
+      transform: scale(1.08);
+    }
+
+    #voiceBtn.Listening {
+      background-color: #ff7b72;
+      box-shadow: 0 0 20px rgba(255, 123, 114, 0.6);
+    }
+
+    #statusText {
+      font-size: 0.9rem;
+      color: #8b949e;
+      min-height: 1.25rem;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand">
-      <h1>J.A.R.V.I.S.</h1>
-    </div>
-    <div class="status">
-      <div class="status-indicator"></div>
-      <span>Live Mode Active</span>
-    </div>
+    <h1>J.A.R.V.I.S. Live</h1>
   </header>
 
-  <main id="chatArea">
+  <div id="chatContainer">
     <div class="message ai">
-      Salaan! Diyaar ayaan u ahay inaan kula hadlo oo aan kaa caawiyo wax walba. Maxaad maanta rabtaa inaan ka wada hadalno?
+      Salaan! Diyaar ayaan u ahay inaan kugu caawiyo wadahadal toos ah. Taabo badhanka hoose si aad u bilowdo.
     </div>
-    <div class="message user">
-      Maanta waxaan rabaa inaan ka wada hadalno sidii aan u horumarin lahayn barnaamajkeena.
-    </div>
-    <div class="message ai">
-      Taasi waa fikrad aad u fiican. Waxaan ku bilaabi karnaa qaab-dhismeedka iyo habaynta xogta.
-    </div>
-  </main>
+  </div>
 
-  <div class="visualizer-container">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
+  <div class="visualizer" id="visualizer">
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
   </div>
 
   <div class="controls">
-    <input type="text" id="userInput" placeholder="Halkan ku qor fariintaada ama la hadal...">
-    <button class="mic-btn" id="micBtn">🎙️</button>
-    <button id="sendBtn">Dir</button>
+    <div id="statusText">Riix badhanka si aad u hadasho</div>
+    <button id="voiceBtn" aria-label="Microphone">🎙️</button>
   </div>
 
   <script>
-    const chatArea = document.getElementById('chatArea');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const micBtn = document.getElementById('micBtn');
+    const chatContainer = document.getElementById('chatContainer');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const statusText = document.getElementById('statusText');
+    const waveBars = document.querySelectorAll('.wave-bar');
 
-    function addMessage(text, sender) {
+    let recognition;
+    let isListening = false;
+
+    // Hubso taageerada Browser-ka
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = 'so-SO'; // Ku hagaaji luuqadda la rabo
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        isListening = true;
+        voiceBtn.classList.add('Listening');
+        voiceBtn.textContent = '⏹️';
+        statusText.textContent = 'Waan ku dhagaysanayaa...';
+        toggleVisualizer(true);
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        voiceBtn.classList.remove('Listening');
+        voiceBtn.textContent = '🎙️';
+        statusText.textContent = 'Riix badhanka si aad u hadasho';
+        toggleVisualizer(false);
+      };
+
+      recognition.onresult = (event) => {
+        const userText = event.results[0][0].transcript;
+        appendMessage(userText, 'user');
+        generateAIResponse(userText);
+      };
+    } else {
+      statusText.textContent = 'Browser-kaagu ma taageero aqoonsiga codka.';
+      voiceBtn.disabled = true;
+    }
+
+    voiceBtn.addEventListener('click', () => {
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+
+    function appendMessage(text, sender) {
       const msgDiv = document.createElement('div');
       msgDiv.classList.add('message', sender);
       msgDiv.textContent = text;
-      chatArea.appendChild(msgDiv);
-      chatArea.scrollTop = chatArea.scrollHeight;
+      chatContainer.appendChild(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      if (sender === 'ai') {
+        speakResponse(text);
+      }
     }
 
-    sendBtn.addEventListener('click', () => {
-      const text = userInput.value.trim();
-      if (text) {
-        addMessage(text, 'user');
-        userInput.value = '';
-        
-        // Simulada jawaabta AI
-        setTimeout(() => {
-          addMessage("Waan fahmay qodobkaas. Aan sii wadno falanqaynta.", 'ai');
-        }, 1000);
-      }
-    });
+    function toggleVisualizer(active) {
+      waveBars.forEach(bar => {
+        if (active) bar.classList.add('active');
+        else bar.classList.remove('active');
+      });
+    }
 
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendBtn.click();
-      }
-    });
+    // Simulada garashada iyo ka jawaabida AI
+    function generateAIResponse(userText) {
+      statusText.textContent = 'JARVIS wuu ka fikirayaa...';
+      toggleVisualizer(false);
+      
+      setTimeout(() => {
+        let reply = "Waan helay farriintaada. Aad ayaan ugu faraxsanahay inaan kaa caawiyo.";
+        if (userText.toLowerCase().includes("sidee")) {
+          reply = "Anigu si fiican ayaan u shaqaynayaa, mahadsanid!";
+        } else if (userText.toLowerCase().includes("magaca")) {
+          reply = "Magacaygu waa JARVIS, kaaliyahaaga gaarka ah.";
+        }
+        appendMessage(reply, 'ai');
+      }, 1000);
+    }
 
-    // Simulada shidida makarafoonka
-    micBtn.addEventListener('click', () => {
-      alert("Habkaaysiga codka waa la shiday. Hada waad hadli kartaa.");
-    });
+    // Ku hadalka jawaabta
+    function speakResponse(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Jooji hadalkii hore haddii uu jiray
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'so-SO';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+
+        statusText.textContent = 'Waan akhrinayaa...';
+        toggleVisualizer(true);
+
+        utterance.onend = () => {
+          statusText.textContent = 'Riix badhanka si aad u hadasho';
+          toggleVisualizer(false);
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+    }
   </script>
 </body>
 </html>
