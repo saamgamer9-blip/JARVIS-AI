@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sam Gamer Live Interface</title>
+  <title>Sam Gamer</title>
   <style>
     :root {
       --bg-overlay: rgba(10, 12, 18, 0.75);
@@ -23,7 +23,9 @@
     }
 
     body {
-      background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://i.ibb.co/6Rv00xZ/image-3.jpg');
+      /* Sawirkaaga ku kaydi isla meesha koodhku yaallo una bixi sawir.jpg */
+      background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('sawir.jpg');
+      background-color: #05070e;
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -136,11 +138,11 @@
     .config-panel {
       width: 100%;
       background: var(--surface-color);
-      padding: 12px 20px;
+      padding: 10px 14px;
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
     }
 
@@ -148,11 +150,21 @@
       flex: 1;
       background: rgba(5, 7, 14, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 8px 12px;
+      padding: 10px 12px;
       border-radius: 8px;
       color: var(--text-color);
       font-size: 0.9rem;
       outline: none;
+    }
+
+    #saveKeyBtn {
+      background: var(--accent-color);
+      color: #05070e;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .visualizer {
@@ -233,13 +245,14 @@
 
   <main id="chatArea">
     <div class="message ai">
-      Sam Gamer oo diyaar ah! Geli furahaaga Gemini API si aan u bilowno.
+      Sam Gamer oo diyaar ah! Geli furahaaga Gemini API, riix Save, kadibna taabo makarafoonka.
     </div>
   </main>
 
   <div class="interface-controls">
     <div class="config-panel">
-      <input type="password" id="geminiKey" placeholder="Ku dheji Gemini API Key halkan...">
+      <input type="password" id="geminiKey" placeholder="Ku dheji Gemini API Key...">
+      <button id="saveKeyBtn">Save</button>
     </div>
 
     <div class="visualizer" id="visualizer">
@@ -260,6 +273,7 @@
     const micBtn = document.getElementById('micBtn');
     const statusText = document.getElementById('statusText');
     const geminiKeyInput = document.getElementById('geminiKey');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
     const bars = document.querySelectorAll('.bar');
 
     let recognition;
@@ -270,8 +284,24 @@
       geminiKeyInput.value = savedKey;
     }
 
-    geminiKeyInput.addEventListener('input', () => {
-      localStorage.setItem('sam_gamer_key', geminiKeyInput.value.trim());
+    function saveApiKey() {
+      const key = geminiKeyInput.value.trim();
+      if (key) {
+        localStorage.setItem('sam_gamer_key', key);
+        geminiKeyInput.blur(); // Xidh keyboard-ka
+        statusText.textContent = 'Furaha waa la kaydiyay!';
+        appendMessage("Furahaaga API waa la kaydiyay. Hadda waad hadli kartaa.", 'ai');
+      }
+    }
+
+    saveKeyBtn.addEventListener('click', saveApiKey);
+
+    // Oggolow in badhanka Enter/Go ee keyboard-ku uu shaqeeyo
+    geminiKeyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveApiKey();
+      }
     });
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -387,7 +417,7 @@
           appendMessage(reply, 'ai');
           speakText(reply);
         } else {
-          const errorMsg = "Kuma xidhiidhi karo server-ka.";
+          const errorMsg = "Kuma xidhiidhi karo server-ka. Hubi furahaaga API.";
           appendMessage(errorMsg, 'ai');
           speakText(errorMsg);
         }
