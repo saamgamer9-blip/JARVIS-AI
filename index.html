@@ -1,533 +1,459 @@
-Waa fahmay. Waxaan kuu diyaariyey koodhka dhammaystiran ee index.html. Kani wuxuu isugu keenayaa dhammaan wixii aynu ka wada hadalnay: Background-kii firfircoonaa, taageerada luuqadaha oo dhan, xulashada codadka (Ilmo, Gabadh, Wiil), Qaybta Video Studio-ga, iyo isku xirka Gemini API si uu u fikiro oo uga jawaabo su'aalaha sida ChatGPT.
-Kaliya tirtir koodhkii hore ee index.html, ku beddel kan, kuna beddel magaca sawirka IMG-20261119-WA0002.jpg magaca sawirkaaga saxda ah haddii uu kale yahay.
 <!DOCTYPE html>
 <html lang="so">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#051325" />
-  <title>JARVIS — Personal AI Assistant</title>
+  <title>J.A.R.V.I.S. — Personal AI Assistant</title>
   <style>
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background-image: linear-gradient(rgba(3, 10, 22, 0.55), rgba(3, 10, 22, 0.65)),
-        url('IMG-20261119-WA0002.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      animation: jarvisMotion 9s ease-in-out infinite alternate;
+    :root {
+      --bg-dark: #070d16;
+      --panel-bg: rgba(11, 22, 38, 0.86);
+      --panel-border: rgba(56, 189, 248, 0.28);
+      --accent: #0ea5e9;
+      --accent-bright: #38bdf8;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --danger: #f87171;
+      --success: #34d399;
     }
 
-    @keyframes jarvisMotion {
-      0% {
-        transform: scale(1) translateY(0px);
-        filter: brightness(0.95) contrast(1.05);
-      }
-      50% {
-        transform: scale(1.04) translateY(-6px);
-        filter: brightness(1.08) contrast(1.15);
-      }
-      100% {
-        transform: scale(1.02) translateY(4px);
-        filter: brightness(0.98) contrast(1.1);
-      }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-
-    :root { color-scheme: dark; }
-    * { box-sizing: border-box; }
 
     body {
-      margin: 0;
       min-height: 100vh;
-      font-family: system-ui, -apple-system, sans-serif;
-      background: transparent;
-      color: #e6f1ff;
-      display: flex;
-      justify-content: center;
+      background-color: var(--bg-dark);
+      background-image:
+        linear-gradient(rgba(7, 13, 22, 0.72), rgba(7, 13, 22, 0.85)),
+        url("IMG-20261119-WA0002.jpg");
+      background-size: cover;
+      background-position: center top;
+      background-attachment: fixed;
+      color: var(--text-main);
       padding: 16px;
     }
 
-    main {
-      width: 100%;
-      max-width: 680px;
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    header h1 {
-      margin: 0;
-      letter-spacing: 4px;
-      color: #45d0ff;
-    }
-
-    header p {
-      margin: 4px 0 0;
-      font-size: 12px;
-      opacity: 0.8;
-    }
-
-    #clock {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #9ad8ff;
-    }
-
-    .panel {
-      background: rgba(10, 29, 48, 0.84);
-      backdrop-filter: blur(8px);
-      border: 1px solid #24516a;
+    .card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
       border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    header.card {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand h1 {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--accent-bright);
+    }
+
+    .brand p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .status-badge {
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid var(--panel-border);
+      color: var(--accent-bright);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
     }
 
     label {
       display: block;
-      font-size: 13px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
       margin-bottom: 6px;
-      color: #9ad8ff;
     }
 
-    textarea, select, input[type="password"], input[type="text"] {
+    select, input, textarea {
       width: 100%;
+      padding: 10px 12px;
       border-radius: 10px;
-      border: 1px solid #2a5d7a;
-      background: rgba(6, 20, 34, 0.92);
-      color: #ffffff;
-      padding: 10px;
-      font-size: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      margin-bottom: 12px;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-bright);
     }
 
     textarea {
-      min-height: 80px;
-      font-size: 15px;
+      min-height: 90px;
       resize: vertical;
     }
 
-    .row {
+    .btn-row {
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 10px;
-      align-items: center;
+      gap: 8px;
     }
 
     button {
-      border: none;
+      padding: 10px 16px;
       border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 14px;
-      font-weight: 600;
+      border: none;
       cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.1s ease, opacity 0.15s ease;
     }
 
-    .primary {
-      background: #1ea7e1;
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--accent);
       color: #ffffff;
     }
 
-    .secondary {
-      background: #14364c;
-      color: #e6f1ff;
-      border: 1px solid #2c6282;
+    .btn-primary:hover {
+      background: var(--accent-bright);
+      color: #04101d;
     }
 
-    #status {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #8fd3ff;
+    .btn-secondary {
+      background: rgba(51, 65, 85, 0.85);
+      color: var(--text-main);
+      border: 1px solid rgba(148, 163, 184, 0.25);
     }
 
-    .history {
+    .chat-box {
+      max-height: 360px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: 340px;
-      overflow-y: auto;
+      padding-right: 4px;
     }
 
-    .bubble {
-      padding: 10px 12px;
+    .msg {
+      padding: 10px 14px;
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 0.92rem;
       line-height: 1.45;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    .user {
-      background: rgba(19, 56, 82, 0.9);
+    .msg.user {
+      background: rgba(14, 165, 233, 0.22);
+      border: 1px solid rgba(56, 189, 248, 0.4);
       align-self: flex-end;
-      border: 1px solid #2b688c;
+      max-width: 85%;
     }
 
-    .jarvis {
-      background: rgba(9, 36, 56, 0.9);
+    .msg.bot {
+      background: rgba(30, 41, 59, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.2);
       align-self: flex-start;
-      border: 1px solid #1d4c68;
+      max-width: 90%;
+    }
+
+    .msg.error {
+      background: rgba(127, 29, 29, 0.45);
+      border: 1px solid var(--danger);
+      color: #fecaca;
+      align-self: flex-start;
+      max-width: 95%;
+    }
+
+    .studio-output {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px dashed rgba(56, 189, 248, 0.35);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      min-height: 70px;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: -6px;
+      margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="video-background"></div>
-
-  <main>
-    <header>
-      <h1>J.A.R.V.I.S.</h1>
-      <p>PERSONAL AI ASSISTANT — CHAT, VOICE & VIDEO STUDIO</p>
-      <div id="clock"></div>
+  <div class="container">
+    <header class="card">
+      <div class="brand">
+        <h1>J.A.R.V.I.S.</h1>
+        <p>PERSONAL AI ASSISTANT • CHAT, VOICE & VIDEO STUDIO</p>
+      </div>
+      <div id="statusBadge" class="status-badge">Diyaar u ah</div>
     </header>
 
-    <section class="panel">
-      <div class="row" style="margin-top: 0; margin-bottom: 10px;">
-        <div style="flex: 1; min-width: 150px;">
-          <label for="langSelect">Luuqadda (All Languages)</label>
-          <select id="langSelect">
-            <option value="so-SO">Soomaali (so-SO)</option>
-            <option value="en-US">English — US (en-US)</option>
-            <option value="en-GB">English — UK (en-GB)</option>
-            <option value="ar-SA">العربية (ar-SA)</option>
-            <option value="fr-FR">Français (fr-FR)</option>
-            <option value="es-ES">Español (es-ES)</option>
-            <option value="de-DE">Deutsch (de-DE)</option>
-            <option value="it-IT">Italiano (it-IT)</option>
-            <option value="pt-PT">Português (pt-PT)</option>
-            <option value="ru-RU">Русский (ru-RU)</option>
-            <option value="hi-IN">हिन्दी (hi-IN)</option>
-            <option value="bn-BD">বাংলা (bn-BD)</option>
-            <option value="ur-PK">اردو (ur-PK)</option>
-            <option value="tr-TR">Türkçe (tr-TR)</option>
-            <option value="sw-KE">Kiswahili (sw-KE)</option>
-            <option value="am-ET">አማርኛ (am-ET)</option>
-            <option value="ja-JP">日本語 (ja-JP)</option>
-            <option value="ko-KR">한국어 (ko-KR)</option>
-            <option value="zh-CN">中文 — 普通话 (zh-CN)</option>
-          </select>
+    <div class="grid-2">
+      <section class="card">
+        <label for="langSelect">Luuqadda (Language)</label>
+        <select id="langSelect">
+          <option value="so-SO" selected>Soomaali (so-SO)</option>
+          <option value="en-US">English (en-US)</option>
+          <option value="ar-SA">العربية (ar-SA)</option>
+        </select>
+
+        <label for="voiceSelect">Codka (Ilmo / Gabdh / Wiil / Sidaada)</label>
+        <select id="voiceSelect">
+          <option value="default">Codka Caadiga ah (Default)</option>
+          <option value="male">Wiil / Cod Qoto Dheer</option>
+          <option value="female">Gabdh / Cod Fudud</option>
+          <option value="child">Ilmo yar / Cod Sare</option>
+        </select>
+
+        <label for="apiKeyInput">Gemini API Key (AIza...)</label>
+        <input
+          type="password"
+          id="apiKeyInput"
+          placeholder="Ku dheji Gemini API Key (tusaale: AIzaSy...)"
+          autocomplete="off"
+        />
+        <p class="hint">
+          Fiiro gaar ah: Furayaasha bilaabma <code>AQ...</code> waa auth token; wicitaanka tooska ah ee <code>?key=</code> wuxuu u baahan yahay key caadi ah oo <code>AIza...</code> ah.
+        </p>
+
+        <label for="promptInput">Su'aashaada / Amarkaaga</label>
+        <textarea
+          id="promptInput"
+          placeholder="Tusaale: Ii qor sheeko gaaban ama i weydii su'aal walba..."
+        ></textarea>
+
+        <div class="btn-row">
+          <button id="sendBtn" class="btn-primary">Dir</button>
+          <button id="speakBtn" class="btn-secondary">Akhri Jawaabta</button>
+          <button id="clearBtn" class="btn-secondary">Nadiifi</button>
         </div>
+      </section>
 
-        <div style="flex: 1; min-width: 150px;">
-          <label for="voicePersona">Codka (Ilmo / Gabadh / Wiil / Sidaada)</label>
-          <select id="voicePersona">
-            <option value="clone_me">Sidaada (U eg adiga)</option>
-            <option value="child">Ilmo yar</option>
-            <option value="girl">Gabadh</option>
-            <option value="boy" selected>Wiil</option>
-          </select>
+      <section class="card">
+        <h2 style="font-size: 1.05rem; color: var(--accent-bright); margin-bottom: 10px;">
+          JARVIS Video Studio (Diyaarinta Fiidyowga)
+        </h2>
+        <label for="videoTopicInput">Qor mawduuca fiidyowga</label>
+        <input
+          type="text"
+          id="videoTopicInput"
+          placeholder="Tusaale: Sheeko dhiirrigelin ah ama Geel iyo Waraabe"
+        />
+        <div class="btn-row">
+          <button id="genScriptBtn" class="btn-primary">1. Diyaari Qoraalka Fiidyowga</button>
+          <button id="genScenesBtn" class="btn-secondary">2. Diyaari Muuqaallada (Scenes)</button>
+        </div>
+        <div id="videoOutput" class="studio-output">
+          Halkan waxaa ka soo bixi doona qoraalka fiidyowga ama qorshaha muuqaallada...
+        </div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2 style="font-size: 1.05rem; color: var(--accent-bright); margin-bottom: 10px;">
+        Wada-hadalka
+      </h2>
+      <div id="chatBox" class="chat-box">
+        <div class="msg bot">
+          Salaan! Waxaan ahay JARVIS. Waxaad i weydiin kartaa su'aal walba, waxaadna diyaarin kartaa qoraallo fiidyow. Haddii aad furaha API-ga geliso, waxaan si toos ah ugu xirmi doonaa Gemini.
         </div>
       </div>
-
-      <label for="apiKeyInput">Gemini API Key (Ikhtiyaari — si uu u fekero sida Gemini/ChatGPT)</label>
-      <input type="password" id="apiKeyInput" placeholder="Ku dheji Gemini API Key halkan (waxaa lagu keydiyaa browser-kaaga oo keliya)..." />
-
-      <label for="command" style="margin-top: 10px;">Su'aashaada / Amarkaaga</label>
-      <textarea id="command" placeholder="Tusaale: Ii qor sheeko fiidyow ah, ama i weydii su'aal walba..."></textarea>
-
-      <div class="row">
-        <button class="primary" id="send">Dir</button>
-        <button class="secondary" id="voice">Cod (Dhagayso)</button>
-        <button class="secondary" id="speakLast">Akhri Jawaabta</button>
-      </div>
-      <div id="status">Diyaar u ah inuu ku caawiyo.</div>
     </section>
-
-    <section class="panel" id="videoStudio">
-      <label>🎬 JARVIS Video Studio (Diyaariyaha Fiidyowga)</label>
-      <textarea id="videoPrompt" placeholder="Qor mawduuca fiidyowga: tusaale 'Sheeko dhiirrigelin ah' ama 'Sharrax kooban oo ku saabsan AI'..."></textarea>
-
-      <div class="row">
-        <button class="primary" id="generateScriptBtn">1. Diyaari Qoraalka Fiidyowga</button>
-        <button class="secondary" id="renderVideoBtn">2. Samee Fiidyowga</button>
-        <a id="downloadVideoLink" style="display:none; padding: 10px 14px; background: #16a34a; color: #ffffff; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600;" download="JARVIS-Video.webm">⬇️ Degso Fiidyowga</a>
-      </div>
-
-      <canvas id="jarvisCanvas" width="720" height="1280" style="width: 100%; max-width: 280px; margin-top: 12px; border-radius: 12px; border: 1px solid #2a5d7a; display: block;"></canvas>
-    </section>
-
-    <section class="panel">
-      <label>Wada-hadalka</label>
-      <div class="history" id="history"></div>
-    </section>
-  </main>
+  </div>
 
   <script>
-    const $ = (id) => document.getElementById(id);
-    let lastReply = "";
+    const apiKeyInput = document.getElementById("apiKeyInput");
+    const promptInput = document.getElementById("promptInput");
+    const langSelect = document.getElementById("langSelect");
+    const voiceSelect = document.getElementById("voiceSelect");
+    const sendBtn = document.getElementById("sendBtn");
+    const speakBtn = document.getElementById("speakBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const chatBox = document.getElementById("chatBox");
+    const statusBadge = document.getElementById("statusBadge");
+    const videoTopicInput = document.getElementById("videoTopicInput");
+    const genScriptBtn = document.getElementById("genScriptBtn");
+    const genScenesBtn = document.getElementById("genScenesBtn");
+    const videoOutput = document.getElementById("videoOutput");
 
-    if ($("apiKeyInput")) {
-      $("apiKeyInput").value = localStorage.getItem("JARVIS_GEMINI_KEY") || "";
-      $("apiKeyInput").addEventListener("input", () => {
-        localStorage.setItem("JARVIS_GEMINI_KEY", $("apiKeyInput").value.trim());
-      });
+    let lastBotReply = "Salaan! Waxaan ahay JARVIS.";
+
+    const savedKey = localStorage.getItem("jarvis_gemini_key");
+    if (savedKey) {
+      apiKeyInput.value = savedKey;
     }
 
-    function updateClock() {
-      const now = new Date();
-      $("clock").textContent = now.toLocaleString("so-SO");
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+    apiKeyInput.addEventListener("input", () => {
+      localStorage.setItem("jarvis_gemini_key", apiKeyInput.value.trim());
+    });
 
-    function addMessage(sender, text) {
+    function setStatus(text, isError = false) {
+      statusBadge.textContent = text;
+      statusBadge.style.color = isError ? "#fca5a5" : "#38bdf8";
+      statusBadge.style.borderColor = isError ? "#f87171" : "rgba(56, 189, 248, 0.28)";
+    }
+
+    function appendMessage(text, type = "bot") {
       const div = document.createElement("div");
-      div.className = "bubble " + sender;
+      div.className = `msg ${type}`;
       div.textContent = text;
-      $("history").appendChild(div);
-      $("history").scrollTop = $("history").scrollHeight;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      if (type === "bot") {
+        lastBotReply = text;
+      }
     }
 
-    function pickVoiceForLang(langCode, persona) {
-      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-      if (!voices.length) return null;
+    async function callGemini(promptText) {
+      const rawKey = apiKeyInput.value.trim();
 
-      const exactMatches = voices.filter(v => v.lang && v.lang.toLowerCase() === langCode.toLowerCase());
-      const langPrefix = langCode.split("-")[0].toLowerCase();
-      const prefixMatches = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langPrefix));
-      const pool = exactMatches.length ? exactMatches : (prefixMatches.length ? prefixMatches : voices);
-
-      const femaleHints = ["female", "woman", "girl", "samantha", "victoria", "zira", "aria", "salma", "fatima", "amelie", "monica", "anna", "elena", "lucia", "kyoko", "yuna", "xiaoxiao"];
-      const maleHints = ["male", "man", "boy", "daniel", "david", "guy", "alex", "tariq", "omar", "thomas", "jorge", "hans", "luca", "tiago", "dmitry", "rishi", "ahmet", "kenji", "minsu", "yunxi"];
-      const childHints = ["child", "kid", "junior", "youth", "girl", "boy"];
-
-      let hints = maleHints;
-      if (persona === "girl") hints = femaleHints;
-      else if (persona === "child") hints = childHints;
-      else if (persona === "clone_me") hints = maleHints;
-
-      const matched = pool.find(v => hints.some(h => v.name.toLowerCase().includes(h)));
-      return matched || pool[0];
-    }
-
-    function getPersonaSettings(persona) {
-      if (persona === "child") return { pitch: 1.55, rate: 1.12, volume: 1.0 };
-      if (persona === "girl") return { pitch: 1.25, rate: 1.02, volume: 1.0 };
-      if (persona === "clone_me") return { pitch: 0.92, rate: 1.04, volume: 1.0 };
-      return { pitch: 0.88, rate: 0.98, volume: 1.0 };
-    }
-
-    function speak(text) {
-      if (!text || !("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-
-      const langCode = ($("langSelect") && $("langSelect").value) || "so-SO";
-      const persona = ($("voicePersona") && $("voicePersona").value) || "boy";
-      const settings = getPersonaSettings(persona);
-
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = langCode;
-      utter.pitch = settings.pitch;
-      utter.rate = settings.rate;
-      utter.volume = settings.volume;
-
-      const chosenVoice = pickVoiceForLang(langCode, persona);
-      if (chosenVoice) utter.voice = chosenVoice;
-
-      window.speechSynthesis.speak(utter);
-    }
-
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-    }
-
-    async function askAI(promptText) {
-      const key = ($("apiKeyInput") && $("apiKeyInput").value.trim()) || "";
-      const lang = ($("langSelect") && $("langSelect").value) || "so-SO";
-
-      if (!key) {
-        if (/youtube/i.test(promptText)) {
-          window.open("https://www.youtube.com", "_blank");
-          return "Waan furay YouTube.";
-        }
-        if (/google/i.test(promptText)) {
-          window.open("https://www.google.com", "_blank");
-          return "Waan furay Google.";
-        }
-        return "Waxaan ahay JARVIS. Si aan ugu jawaabo su'aalaha adag sida ChatGPT iyo Gemini, ku dheji Gemini API Key sanduuqa kore—ama taabo '1. Diyaari Qoraalka Fiidyowga' si aan kuugu sameeyo qorshe fiidyow.";
+      if (!rawKey) {
+        throw new Error("Fadlan marka hore ku dheji Gemini API Key sanduuqa 'Gemini API Key'.");
       }
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`;
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `You are JARVIS, a smart, helpful AI assistant like ChatGPT and Gemini. Respond clearly in language code (${lang}). User prompt: ${promptText}`
-            }]
-          }]
-        })
-      });
+      if (rawKey.startsWith("AQ.")) {
+        throw new Error(
+          "Furaha aad galisay wuxuu ka bilaabmaa 'AQ.' (auth token), kaas oo aan si toos ah ugu shaqaynayn param-ka ?key= ee REST API. Fadlan samee API key ka bilaabma 'AIza...' oo ku tijaabi."
+        );
+      }
 
-      const data = await res.json();
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Ma helin jawaab waafi ah, fadlan mar kale isku day.";
-      return reply;
+      const models = ["gemini-2.5-flash", "gemini-2.0-flash"];
+      let lastErrorMessage = "";
+
+      for (const model of models) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(rawKey)}`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [{ text: promptText }]
+              }
+            ]
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (candidateText && candidateText.trim()) {
+            return candidateText.trim();
+          }
+          throw new Error("API-gu wuu jawaabay laakiin qoraal jawaab ah ma soo celin.");
+        }
+
+        const apiErrMsg = data?.error?.message || `HTTP ${response.status}`;
+        lastErrorMessage = `(${model} — ${response.status}): ${apiErrMsg}`;
+
+        if (response.status !== 404) {
+          throw new Error(lastErrorMessage);
+        }
+      }
+
+      throw new Error(lastErrorMessage || "Model-ka lama helin.");
     }
 
-    async function handleCommand() {
-      const text = $("command").value.trim();
+    async function handleSend() {
+      const text = promptInput.value.trim();
       if (!text) return;
 
-      addMessage("user", text);
-      $("command").value = "";
-      $("status").textContent = "JARVIS wuxuu ka fekerayaa jawaabta...";
+      appendMessage(text, "user");
+      promptInput.value = "";
+      setStatus("Waa la dirayaa...");
+      sendBtn.disabled = true;
 
       try {
-        const reply = await askAI(text);
-        lastReply = reply;
-        addMessage("jarvis", reply);
-        $("status").textContent = "Jawaabta waa diyaar.";
-        speak(reply);
+        const langLabel = langSelect.options[langSelect.selectedIndex].text;
+        const instructedPrompt = `Uga jawaab luuqadda (${langLabel}) si cad oo caawimo leh:\n\n${text}`;
+        const reply = await callGemini(instructedPrompt);
+        appendMessage(reply, "bot");
+        setStatus("Wuu shaqaynayaa");
       } catch (err) {
-        const errMsg = "Khalad ayaa ka dhacay xiriirka AI.";
-        lastReply = errMsg;
-        addMessage("jarvis", errMsg);
-        $("status").textContent = errMsg;
+        appendMessage(`Cillad API: ${err.message}`, "error");
+        setStatus("Cillad ayaa dhacday", true);
+      } finally {
+        sendBtn.disabled = false;
       }
     }
 
-    $("send").addEventListener("click", handleCommand);
-    $("command").addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleCommand();
-      }
-    });
-
-    $("speakLast").addEventListener("click", () => {
-      if (lastReply) speak(lastReply);
-    });
-
-    $("voice").addEventListener("click", () => {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRec) {
-        $("status").textContent = "Browser-kan ma taageerayo cod-aqoonsiga.";
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) {
+        appendMessage("Browser-kaagu ma taageero akhrinta codka (SpeechSynthesis).", "error");
         return;
       }
-      const rec = new SpeechRec();
-      rec.lang = ($("langSelect") && $("langSelect").value) || "so-SO";
-      $("status").textContent = "Waan ku dhagaysanayaa...";
-      rec.onresult = (event) => {
-        const spoken = event.results[0][0].transcript;
-        $("command").value = spoken;
-        $("status").textContent = "Codka waa la qoray.";
-        handleCommand();
-      };
-      rec.onerror = () => {
-        $("status").textContent = "Codka si fiican looma maqlin.";
-      };
-      rec.start();
-    });
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langSelect.value;
 
-    $("generateScriptBtn").addEventListener("click", async () => {
-      const topic = $("videoPrompt").value.trim();
+      if (voiceSelect.value === "male") {
+        utterance.pitch = 0.8;
+        utterance.rate = 0.95;
+      } else if (voiceSelect.value === "female") {
+        utterance.pitch = 1.15;
+        utterance.rate = 1.0;
+      } else if (voiceSelect.value === "child") {
+        utterance.pitch = 1.45;
+        utterance.rate = 1.05;
+      } else {
+        utterance.pitch = 1.0;
+        utterance.rate = 1.0;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    async function handleVideoStudio(mode) {
+      const topic = videoTopicInput.value.trim();
       if (!topic) {
-        $("status").textContent = "Fadlan qor mawduuca fiidyowga marka hore.";
+        videoOutput.textContent = "Fadlan marka hore qor mawduuca fiidyowga.";
         return;
       }
 
-      $("status").textContent = "JARVIS wuxuu diyaarinayaa qoraalka fiidyowga...";
-      const promptForVideo = `Create a short 4-scene engaging video script about: "${topic}". Keep each scene concise (1-2 sentences) so it fits on video subtitles.`;
-      const scriptText = await askAI(promptForVideo);
+      videoOutput.textContent = "Waa la diyaarinayaa...";
+      setStatus("Video Studio wuu shaqaynayaa...");
 
-      lastReply = scriptText;
-      $("command").value = scriptText;
-      addMessage("jarvis", "🎬 Qoraalka Fiidyowga:\n\n" + scriptText);
-      $("status").textContent = "Qoraalka fiidyowga waa diyaar! Hadda taabo '2. Samee Fiidyowga'.";
-      speak(scriptText);
-    });
+      const prompt =
+        mode === "script"
+          ? `Qor qoraal fiidyow (voiceover script) oo xiiso leh, nadiif ah, una qoran Af-Soomaali, kuna saabsan mawduuca: "${topic}". Ku dar bilow soo jiidasho leh, qodobbo muhiim ah, iyo gunaanad kooban.`
+          : `U qaybi mawduuca fiidyowga ee "${topic}" 5 muuqaal (Scene 1 ilaa Scene 5). Muuqaal walba ku qor: 1) Muuqaalka la arkayo (Visual/AI Image Prompt), iyo 2) Hadalka / Codka (Narration).`;
 
-    $("renderVideoBtn").addEventListener("click", () => {
-      const rawText = ($("command").value.trim() || $("videoPrompt").value.trim());
-      if (!rawText) {
-        $("status").textContent = "Qor qoraal ama diyaari qoraalka fiidyowga marka hore.";
-        return;
-      }
-
-      const canvas = $("jarvisCanvas");
-      const ctx = canvas.getContext("2d");
-      const lines = rawText.split(/\n+/).map(s => s.trim()).filter(Boolean);
-      const stream = canvas.captureStream(30);
-      const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
-      const chunks = [];
-
-      recorder.ondataavailable = (e) => {
-        if (e.data && e.data.size > 0) chunks.push(e.data);
-      };
-
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: "video/webm" });
-        const url = URL.createObjectURL(blob);
-        const link = $("downloadVideoLink");
-        link.href = url;
-        link.style.display = "inline-block";
-        $("status").textContent = "Fiidyowgii waa diyaar! Taabo 'Degso Fiidyowga'.";
-      };
-
-      recorder.start();
-      $("status").textContent = "Fiidyowga waa la duubayaa...";
-      speak(rawText);
-
-      const framesPerLine = 90;
-      let frame = 0;
-      const totalFrames = Math.max(lines.length, 1) * framesPerLine;
-
-      const timer = setInterval(() => {
-        const idx = Math.min(Math.floor(frame / framesPerLine), lines.length - 1);
-        const currentLine = lines[idx] || rawText;
-
-        const grad = ctx.createLinearGradient(0, 0, 720, 1280);
-        grad.addColorStop(0, "#051325");
-        grad.addColorStop(1, "#0d3b66");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 720, 1280);
-
-        ctx.beginPath();
-        ctx.arc(360, 400, 105 + Math.sin(frame * 0.12) * 14, 0, Math.PI * 2);
-        ctx.strokeStyle = "#45d0ff";
-        ctx.lineWidth = 8;
-        ctx.stroke();
-
-        ctx.fillStyle = "#45d0ff";
-        ctx.font = "bold 36px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("J.A.R.V.I.S.", 360, 412);
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 34px sans-serif";
-        wrapCanvasText(ctx, currentLine, 360, 680, 620, 46);
-
-        frame++;
-        if (frame >= totalFrames) {
-          clearInterval(timer);
-          recorder.stop();
-        }
-      }, 1000 / 30);
-    });
-
-    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
-      const words = text.split(/\s+/);
-      let line = "";
-      for (let i = 0; i < words.length; i++) {
-        const testLine = line + words[i] + " ";
-        if (ctx.measureText(testLine).width > maxWidth && i > 0) {
-          ctx.fillText(line.trim(), x, y);
-          line = words[i] + " ";
-          y += lineHeight;
-        } else {
-          line = testLine;
-        }
-      }
-      ctx.fillText(line.trim(), x, y);
-    }
-
-    addMessage("jarvis", "Salaan! Waxaan ahay JARVIS. Waxaad i weydiin kartaa su'aal walba, waxaad dooran kartaa luuqad iyo cod (Ilmo yar / Gabadh / Wiil / Sidaada), waxaadna samayn kartaa fiidyow.");
-  </script>
-</body>
-</html>
-
+      try {
+        const result = await callGemini(prompt);
+        videoOutput.textContent = result;
+        setStatus("Wuu shaqaynayaa");
