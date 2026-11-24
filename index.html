@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>J.A.R.V.I.S. — Personal AI Assistant</title>
+  <title>JARVIS — Gemini Auto</title>
   <style>
     :root {
-      --bg-dark: #070d16;
-      --panel-bg: rgba(11, 22, 38, 0.86);
-      --panel-border: rgba(56, 189, 248, 0.28);
-      --accent: #0ea5e9;
-      --accent-bright: #38bdf8;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
+      --bg-top: #040508;
+      --bg-mid: #050811;
+      --bg-bottom-glow: rgba(29, 78, 216, 0.22);
+      --surface: rgba(20, 22, 29, 0.92);
+      --surface-elevated: rgba(30, 34, 45, 0.96);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent-blue: #4285f4;
+      --accent-purple: #9b72cb;
+      --accent-red: #d96570;
       --danger: #f87171;
-      --success: #34d399;
     }
 
     * {
@@ -26,291 +29,489 @@
 
     body {
       min-height: 100vh;
-      background-color: var(--bg-dark);
-      background-image:
-        linear-gradient(rgba(7, 13, 22, 0.72), rgba(7, 13, 22, 0.85)),
-        url("IMG-20261119-WA0002.jpg");
-      background-size: cover;
-      background-position: center top;
-      background-attachment: fixed;
-      color: var(--text-main);
-      padding: 16px;
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      display: grid;
-      gap: 16px;
-    }
-
-    .card {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      padding: 16px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-    }
-
-    header.card {
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 100%, var(--bg-bottom-glow), transparent 58%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 65%, #070d24 100%);
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       justify-content: space-between;
+      padding: 14px 14px 18px;
+    }
+
+    /* Top Bar */
+    .topbar {
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 4px 2px;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 1.2rem;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .mode-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #e5e7eb;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 10px;
+    }
+
+    .mode-pill:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .top-right {
+      display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .brand h1 {
-      font-size: 1.5rem;
-      letter-spacing: 2px;
-      color: var(--accent-bright);
-    }
-
-    .brand p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .status-badge {
-      font-size: 0.78rem;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(14, 165, 233, 0.15);
-      border: 1px solid var(--panel-border);
-      color: var(--accent-bright);
-    }
-
-    .grid-2 {
+    .avatar-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1.5px solid rgba(155, 114, 203, 0.7);
+      background: #111827;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    select, input, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-main);
-      font-size: 0.92rem;
-      margin-bottom: 12px;
-    }
-
-    select:focus, input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--accent-bright);
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    button {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: none;
+      place-items: center;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: transform 0.1s ease, opacity 0.15s ease;
     }
 
-    button:active {
-      transform: scale(0.98);
+    .avatar-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #ffffff;
+    /* Optional Drawer / API Bar */
+    .api-drawer {
+      max-width: 820px;
+      width: 100%;
+      margin: 8px auto 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: none;
+      gap: 10px;
+      flex-direction: column;
     }
 
-    .btn-primary:hover {
-      background: var(--accent-bright);
-      color: #04101d;
+    .api-drawer.open {
+      display: flex;
     }
 
-    .btn-secondary {
-      background: rgba(51, 65, 85, 0.85);
-      color: var(--text-main);
-      border: 1px solid rgba(148, 163, 184, 0.25);
+    .api-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .chat-box {
-      max-height: 360px;
-      overflow-y: auto;
+    .api-row input, .api-row select {
+      flex: 1;
+      min-width: 180px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(10, 12, 18, 0.9);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .mini-note {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* Center Hero & Messages */
+    .main-area {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding-right: 4px;
+      justify-content: center;
+      padding: 16px 4px;
+      overflow-y: auto;
     }
 
-    .msg {
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 0.92rem;
-      line-height: 1.45;
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      margin: auto 0;
+      padding: 24px 8px;
+    }
+
+    .gemini-sparkle {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-red));
+      clip-path: polygon(
+        50% 0%,
+        62% 38%,
+        100% 50%,
+        62% 62%,
+        50% 100%,
+        38% 62%,
+        0% 50%,
+        38% 38%
+      );
+      filter: drop-shadow(0 0 12px rgba(114, 137, 218, 0.45));
+    }
+
+    .hero h1 {
+      font-size: clamp(1.5rem, 4.5vw, 2.05rem);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: #f9fafb;
+    }
+
+    .messages {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 58vh;
+      overflow-y: auto;
+      padding-bottom: 8px;
+    }
+
+    .messages.has-items {
+      display: flex;
+    }
+
+    .hero.hidden {
+      display: none;
+    }
+
+    .bubble {
+      padding: 11px 15px;
+      border-radius: 16px;
+      font-size: 0.94rem;
+      line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
     }
 
-    .msg.user {
-      background: rgba(14, 165, 233, 0.22);
-      border: 1px solid rgba(56, 189, 248, 0.4);
+    .bubble.user {
       align-self: flex-end;
+      background: #252b3b;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       max-width: 85%;
     }
 
-    .msg.bot {
-      background: rgba(30, 41, 59, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.2);
+    .bubble.assistant {
       align-self: flex-start;
-      max-width: 90%;
+      background: rgba(17, 21, 32, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      max-width: 92%;
     }
 
-    .msg.error {
+    .bubble.error {
+      align-self: flex-start;
       background: rgba(127, 29, 29, 0.45);
       border: 1px solid var(--danger);
       color: #fecaca;
-      align-self: flex-start;
       max-width: 95%;
     }
 
-    .studio-output {
-      margin-top: 12px;
-      padding: 12px;
+    .attached-preview {
+      max-width: 170px;
+      max-height: 170px;
       border-radius: 10px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px dashed rgba(56, 189, 248, 0.35);
-      font-size: 0.9rem;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      min-height: 70px;
+      margin-top: 8px;
+      display: block;
+      border: 1px solid var(--border);
     }
 
-    .hint {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: -6px;
-      margin-bottom: 12px;
+    /* Bottom Composer Card */
+    .composer-wrap {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .composer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 14px 16px 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 8px;
+    }
+
+    .status-link {
+      background: transparent;
+      border: none;
+      color: #e5e7eb;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .status-link:hover {
+      text-decoration: underline;
+    }
+
+    .pending-file {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-elevated);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #d1d5db;
+    }
+
+    .pending-file.show {
+      display: flex;
+    }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #promptField {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      resize: none;
+      min-height: 24px;
+      max-height: 120px;
+    }
+
+    #promptField::placeholder {
+      color: #d1d5db;
+      opacity: 0.9;
+    }
+
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .left-actions, .right-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .round-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: #e5e7eb;
+      font-size: 1.25rem;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .round-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .live-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: #2b344b;
+      color: #eef2ff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .live-btn.active {
+      background: #4285f4;
+      color: #ffffff;
+    }
+
+    .send-chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      background: #3b82f6;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .send-chip:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="card">
-      <div class="brand">
-        <h1>J.A.R.V.I.S.</h1>
-        <p>PERSONAL AI ASSISTANT • CHAT, VOICE & VIDEO STUDIO</p>
-      </div>
-      <div id="statusBadge" class="status-badge">Diyaar u ah</div>
-    </header>
-
-    <div class="grid-2">
-      <section class="card">
-        <label for="langSelect">Luuqadda (Language)</label>
-        <select id="langSelect">
-          <option value="so-SO" selected>Soomaali (so-SO)</option>
-          <option value="en-US">English (en-US)</option>
-          <option value="ar-SA">العربية (ar-SA)</option>
-        </select>
-
-        <label for="voiceSelect">Codka (Ilmo / Gabdh / Wiil / Sidaada)</label>
-        <select id="voiceSelect">
-          <option value="default">Codka Caadiga ah (Default)</option>
-          <option value="male">Wiil / Cod Qoto Dheer</option>
-          <option value="female">Gabdh / Cod Fudud</option>
-          <option value="child">Ilmo yar / Cod Sare</option>
-        </select>
-
-        <label for="apiKeyInput">Gemini API Key (AIza...)</label>
-        <input
-          type="password"
-          id="apiKeyInput"
-          placeholder="Ku dheji Gemini API Key (tusaale: AIzaSy...)"
-          autocomplete="off"
-        />
-        <p class="hint">
-          Fiiro gaar ah: Furayaasha bilaabma <code>AQ...</code> waa auth token; wicitaanka tooska ah ee <code>?key=</code> wuxuu u baahan yahay key caadi ah oo <code>AIza...</code> ah.
-        </p>
-
-        <label for="promptInput">Su'aashaada / Amarkaaga</label>
-        <textarea
-          id="promptInput"
-          placeholder="Tusaale: Ii qor sheeko gaaban ama i weydii su'aal walba..."
-        ></textarea>
-
-        <div class="btn-row">
-          <button id="sendBtn" class="btn-primary">Dir</button>
-          <button id="speakBtn" class="btn-secondary">Akhri Jawaabta</button>
-          <button id="clearBtn" class="btn-secondary">Nadiifi</button>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2 style="font-size: 1.05rem; color: var(--accent-bright); margin-bottom: 10px;">
-          JARVIS Video Studio (Diyaarinta Fiidyowga)
-        </h2>
-        <label for="videoTopicInput">Qor mawduuca fiidyowga</label>
-        <input
-          type="text"
-          id="videoTopicInput"
-          placeholder="Tusaale: Sheeko dhiirrigelin ah ama Geel iyo Waraabe"
-        />
-        <div class="btn-row">
-          <button id="genScriptBtn" class="btn-primary">1. Diyaari Qoraalka Fiidyowga</button>
-          <button id="genScenesBtn" class="btn-secondary">2. Diyaari Muuqaallada (Scenes)</button>
-        </div>
-        <div id="videoOutput" class="studio-output">
-          Halkan waxaa ka soo bixi doona qoraalka fiidyowga ama qorshaha muuqaallada...
-        </div>
-      </section>
+  <header class="topbar">
+    <div class="top-left">
+      <button id="menuBtn" class="icon-btn" title="Furaha API & Dejinta" aria-label="Menu">☰</button>
+      <button id="modelCycleBtn" class="mode-pill" title="Beddel qaabka model-ka">
+        <span id="modelLabel">Gemini Auto</span>
+        <span>⌄</span>
+      </button>
     </div>
+    <div class="top-right">
+      <button id="newChatBtn" class="icon-btn" title="Wada-hadal cusub" aria-label="New chat">✎</button>
+      <div id="avatarBtn" class="avatar-ring" title="Furaha API Key">
+        <img src="IMG-20261119-WA0002.jpg" alt="Profile" onerror="this.style.display='none'" />
+      </div>
+    </div>
+  </header>
 
-    <section class="card">
-      <h2 style="font-size: 1.05rem; color: var(--accent-bright); margin-bottom: 10px;">
-        Wada-hadalka
-      </h2>
-      <div id="chatBox" class="chat-box">
-        <div class="msg bot">
-          Salaan! Waxaan ahay JARVIS. Waxaad i weydiin kartaa su'aal walba, waxaadna diyaarin kartaa qoraallo fiidyow. Haddii aad furaha API-ga geliso, waxaan si toos ah ugu xirmi doonaa Gemini.
+  <section id="apiDrawer" class="api-drawer">
+    <div class="api-row">
+      <input
+        type="password"
+        id="apiKeyInput"
+        placeholder="Ku dheji Gemini API Key (AIzaSy...)"
+        autocomplete="off"
+      />
+      <select id="langSelect" title="Luuqadda">
+        <option value="so-SO" selected>Soomaali (so-SO)</option>
+        <option value="en-US">English (en-US)</option>
+        <option value="ar-SA">العربية (ar-SA)</option>
+      </select>
+    </div>
+    <p class="mini-note">
+      Fiiro gaar ah: Geli API key ka bilaabma <code>AIza...</code>. Furayaasha <code>AQ...</code> waa auth token oo kuma shaqeeyaan <code>?key=</code> ee REST API.
+    </p>
+  </section>
+
+  <main class="main-area">
+    <div id="heroSection" class="hero">
+      <div class="gemini-sparkle" aria-hidden="true"></div>
+      <h1 id="greetingTitle">Ask away, JARVIS!</h1>
+    </div>
+    <div id="messagesList" class="messages"></div>
+  </main>
+
+  <div class="composer-wrap">
+    <div class="composer">
+      <div class="status-strip">
+        <span id="statusText">API Key Settings • Tap + or Menu</span>
+        <button id="toggleApiBtn" class="status-link" type="button">API Key</button>
+      </div>
+
+      <div id="pendingFileBar" class="pending-file">
+        <span id="pendingFileName">Fayl la doortay</span>
+        <button id="removeFileBtn" class="status-link" type="button">Ka saar ✕</button>
+      </div>
+
+      <div class="input-line">
+        <textarea
+          id="promptField"
+          rows="1"
+          placeholder="Try @ for more"
+        ></textarea>
+      </div>
+
+      <div class="action-bar">
+        <div class="left-actions">
+          <input type="file" id="fileInput" accept="image/*" hidden />
+          <button id="plusBtn" class="round-btn" type="button" title="Ku dar sawir">+</button>
+        </div>
+        <div class="right-actions">
+          <button id="micBtn" class="round-btn" type="button" title="Ku hadal codkaaga">🎤</button>
+          <button id="sendBtn" class="send-chip" type="button">Dir</button>
+          <button id="liveBtn" class="live-btn" type="button" title="Akhri jawaabta (Voice)">|||</button>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <script>
-    const apiKeyInput = document.getElementById("apiKeyInput");
-    const promptInput = document.getElementById("promptInput");
-    const langSelect = document.getElementById("langSelect");
-    const voiceSelect = document.getElementById("voiceSelect");
-    const sendBtn = document.getElementById("sendBtn");
-    const speakBtn = document.getElementById("speakBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const chatBox = document.getElementById("chatBox");
-    const statusBadge = document.getElementById("statusBadge");
-    const videoTopicInput = document.getElementById("videoTopicInput");
-    const genScriptBtn = document.getElementById("genScriptBtn");
-    const genScenesBtn = document.getElementById("genScenesBtn");
-    const videoOutput = document.getElementById("videoOutput");
+    const MODELS = ["gemini-2.5-flash", "gemini-2.0-flash"];
+    let modelIndex = 0;
+    let lastReplyText = "";
+    let attachedImageBase64 = null;
+    let attachedImageMime = null;
 
-    let lastBotReply = "Salaan! Waxaan ahay JARVIS.";
+    const menuBtn = document.getElementById("menuBtn");
+    const toggleApiBtn = document.getElementById("toggleApiBtn");
+    const avatarBtn = document.getElementById("avatarBtn");
+    const apiDrawer = document.getElementById("apiDrawer");
+    const apiKeyInput = document.getElementById("apiKeyInput");
+    const langSelect = document.getElementById("langSelect");
+    const modelCycleBtn = document.getElementById("modelCycleBtn");
+    const modelLabel = document.getElementById("modelLabel");
+    const newChatBtn = document.getElementById("newChatBtn");
+    const heroSection = document.getElementById("heroSection");
+    const messagesList = document.getElementById("messagesList");
+    const statusText = document.getElementById("statusText");
+    const promptField = document.getElementById("promptField");
+    const plusBtn = document.getElementById("plusBtn");
+    const fileInput = document.getElementById("fileInput");
+    const pendingFileBar = document.getElementById("pendingFileBar");
+    const pendingFileName = document.getElementById("pendingFileName");
+    const removeFileBtn = document.getElementById("removeFileBtn");
+    const micBtn = document.getElementById("micBtn");
+    const sendBtn = document.getElementById("sendBtn");
+    const liveBtn = document.getElementById("liveBtn");
 
     const savedKey = localStorage.getItem("jarvis_gemini_key");
     if (savedKey) {
@@ -321,139 +522,87 @@
       localStorage.setItem("jarvis_gemini_key", apiKeyInput.value.trim());
     });
 
-    function setStatus(text, isError = false) {
-      statusBadge.textContent = text;
-      statusBadge.style.color = isError ? "#fca5a5" : "#38bdf8";
-      statusBadge.style.borderColor = isError ? "#f87171" : "rgba(56, 189, 248, 0.28)";
+    function toggleDrawer() {
+      apiDrawer.classList.toggle("open");
     }
 
-    function appendMessage(text, type = "bot") {
+    menuBtn.addEventListener("click", toggleDrawer);
+    toggleApiBtn.addEventListener("click", toggleDrawer);
+    avatarBtn.addEventListener("click", toggleDrawer);
+
+    modelCycleBtn.addEventListener("click", () => {
+      modelIndex = (modelIndex + 1) % MODELS.length;
+      modelLabel.textContent = modelIndex === 0 ? "Gemini Auto" : MODELS[modelIndex];
+    });
+
+    newChatBtn.addEventListener("click", () => {
+      messagesList.innerHTML = "";
+      messagesList.classList.remove("has-items");
+      heroSection.classList.remove("hidden");
+      statusText.textContent = "Wada-hadal cusub ayaa diyaar ah";
+    });
+
+    plusBtn.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = String(reader.result || "");
+        const commaSplit = result.split(",");
+        if (commaSplit.length === 2) {
+          attachedImageBase64 = commaSplit[1];
+          attachedImageMime = file.type || "image/jpeg";
+          pendingFileName.textContent = `Sawir: ${file.name}`;
+          pendingFileBar.classList.add("show");
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    removeFileBtn.addEventListener("click", () => {
+      attachedImageBase64 = null;
+      attachedImageMime = null;
+      fileInput.value = "";
+      pendingFileBar.classList.remove("show");
+    });
+
+    function addBubble(text, role = "assistant", imgDataUrl = null) {
+      heroSection.classList.add("hidden");
+      messagesList.classList.add("has-items");
+
       const div = document.createElement("div");
-      div.className = `msg ${type}`;
+      div.className = `bubble ${role}`;
       div.textContent = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      if (type === "bot") {
-        lastBotReply = text;
+
+      if (imgDataUrl) {
+        const img = document.createElement("img");
+        img.src = imgDataUrl;
+        img.alt = "Uploaded attachment";
+        img.className = "attached-preview";
+        div.appendChild(img);
+      }
+
+      messagesList.appendChild(div);
+      messagesList.scrollTop = messagesList.scrollHeight;
+
+      if (role === "assistant") {
+        lastReplyText = text;
       }
     }
 
-    async function callGemini(promptText) {
-      const rawKey = apiKeyInput.value.trim();
-
-      if (!rawKey) {
-        throw new Error("Fadlan marka hore ku dheji Gemini API Key sanduuqa 'Gemini API Key'.");
+    async function requestGemini(promptText) {
+      const key = apiKeyInput.value.trim();
+      if (!key) {
+        apiDrawer.classList.add("open");
+        throw new Error("Fadlan ku dheji Gemini API Key sanduuqa sare.");
       }
-
-      if (rawKey.startsWith("AQ.")) {
+      if (key.startsWith("AQ.")) {
         throw new Error(
-          "Furaha aad galisay wuxuu ka bilaabmaa 'AQ.' (auth token), kaas oo aan si toos ah ugu shaqaynayn param-ka ?key= ee REST API. Fadlan samee API key ka bilaabma 'AIza...' oo ku tijaabi."
+          "Furaha 'AQ.' waa auth token oo kuma shaqeeyo ?key= ee REST API. Fadlan isticmaal key ka bilaabma 'AIza...'."
         );
       }
 
-      const models = ["gemini-2.5-flash", "gemini-2.0-flash"];
-      let lastErrorMessage = "";
-
-      for (const model of models) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(rawKey)}`;
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: promptText }]
-              }
-            ]
-          })
-        });
-
-        const data = await response.json().catch(() => ({}));
-
-        if (response.ok) {
-          const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (candidateText && candidateText.trim()) {
-            return candidateText.trim();
-          }
-          throw new Error("API-gu wuu jawaabay laakiin qoraal jawaab ah ma soo celin.");
-        }
-
-        const apiErrMsg = data?.error?.message || `HTTP ${response.status}`;
-        lastErrorMessage = `(${model} — ${response.status}): ${apiErrMsg}`;
-
-        if (response.status !== 404) {
-          throw new Error(lastErrorMessage);
-        }
-      }
-
-      throw new Error(lastErrorMessage || "Model-ka lama helin.");
-    }
-
-    async function handleSend() {
-      const text = promptInput.value.trim();
-      if (!text) return;
-
-      appendMessage(text, "user");
-      promptInput.value = "";
-      setStatus("Waa la dirayaa...");
-      sendBtn.disabled = true;
-
-      try {
-        const langLabel = langSelect.options[langSelect.selectedIndex].text;
-        const instructedPrompt = `Uga jawaab luuqadda (${langLabel}) si cad oo caawimo leh:\n\n${text}`;
-        const reply = await callGemini(instructedPrompt);
-        appendMessage(reply, "bot");
-        setStatus("Wuu shaqaynayaa");
-      } catch (err) {
-        appendMessage(`Cillad API: ${err.message}`, "error");
-        setStatus("Cillad ayaa dhacday", true);
-      } finally {
-        sendBtn.disabled = false;
-      }
-    }
-
-    function speakText(text) {
-      if (!("speechSynthesis" in window)) {
-        appendMessage("Browser-kaagu ma taageero akhrinta codka (SpeechSynthesis).", "error");
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = langSelect.value;
-
-      if (voiceSelect.value === "male") {
-        utterance.pitch = 0.8;
-        utterance.rate = 0.95;
-      } else if (voiceSelect.value === "female") {
-        utterance.pitch = 1.15;
-        utterance.rate = 1.0;
-      } else if (voiceSelect.value === "child") {
-        utterance.pitch = 1.45;
-        utterance.rate = 1.05;
-      } else {
-        utterance.pitch = 1.0;
-        utterance.rate = 1.0;
-      }
-
-      window.speechSynthesis.speak(utterance);
-    }
-
-    async function handleVideoStudio(mode) {
-      const topic = videoTopicInput.value.trim();
-      if (!topic) {
-        videoOutput.textContent = "Fadlan marka hore qor mawduuca fiidyowga.";
-        return;
-      }
-
-      videoOutput.textContent = "Waa la diyaarinayaa...";
-      setStatus("Video Studio wuu shaqaynayaa...");
-
-      const prompt =
-        mode === "script"
-          ? `Qor qoraal fiidyow (voiceover script) oo xiiso leh, nadiif ah, una qoran Af-Soomaali, kuna saabsan mawduuca: "${topic}". Ku dar bilow soo jiidasho leh, qodobbo muhiim ah, iyo gunaanad kooban.`
-          : `U qaybi mawduuca fiidyowga ee "${topic}" 5 muuqaal (Scene 1 ilaa Scene 5). Muuqaal walba ku qor: 1) Muuqaalka la arkayo (Visual/AI Image Prompt), iyo 2) Hadalka / Codka (Narration).`;
-
-      try {
-        const result = await callGemini(prompt);
-        videoOutput.textContent = result;
-        setStatus("Wuu shaqaynayaa");
+      const candidateModels =
+        modelIndex === 0 ? MODELS
