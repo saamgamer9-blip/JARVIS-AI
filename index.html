@@ -1,107 +1,125 @@
-<div class="video-background"></div>
+Waa fahmay. Waxaan kuu diyaariyey koodhka dhammaystiran ee index.html. Kani wuxuu isugu keenayaa dhammaan wixii aynu ka wada hadalnay: Background-kii firfircoonaa, taageerada luuqadaha oo dhan, xulashada codadka (Ilmo, Gabadh, Wiil), Qaybta Video Studio-ga, iyo isku xirka Gemini API si uu u fikiro oo uga jawaabo su'aalaha sida ChatGPT.
+Kaliya tirtir koodhkii hore ee index.html, ku beddel kan, kuna beddel magaca sawirka IMG-20261119-WA0002.jpg magaca sawirkaaga saxda ah haddii uu kale yahay.
 <!DOCTYPE html>
 <html lang="so">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#051325" />
-  <title>JARVIS - Personal AI Assistant</title>
-  <style>.video-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: linear-gradient(rgba(3, 10, 22, 0.55), rgba(3, 10, 22, 0.65)),
-                      url('IMG-20261119-WA0002.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    animation: jarvisMotion 9s ease-in-out infinite alternate;
-}
+  <title>JARVIS — Personal AI Assistant</title>
+  <style>
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: linear-gradient(rgba(3, 10, 22, 0.55), rgba(3, 10, 22, 0.65)),
+        url('IMG-20261119-WA0002.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: jarvisMotion 9s ease-in-out infinite alternate;
+    }
 
-@keyframes jarvisMotion {
-    0% {
+    @keyframes jarvisMotion {
+      0% {
         transform: scale(1) translateY(0px);
         filter: brightness(0.95) contrast(1.05);
-    }
-    50% {
+      }
+      50% {
         transform: scale(1.04) translateY(-6px);
         filter: brightness(1.08) contrast(1.15);
-    }
-    100% {
+      }
+      100% {
         transform: scale(1.02) translateY(4px);
         filter: brightness(0.98) contrast(1.1);
+      }
     }
-}
 
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
       font-family: system-ui, -apple-system, sans-serif;
-      background:  background: transparent;
-
+      background: transparent;
       color: #e6f1ff;
       display: flex;
       justify-content: center;
       padding: 16px;
     }
+
     main {
       width: 100%;
-      max-width: 650px;
+      max-width: 680px;
     }
+
     header {
       text-align: center;
       margin-bottom: 16px;
     }
+
     header h1 {
       margin: 0;
       letter-spacing: 4px;
       color: #45d0ff;
     }
+
     header p {
       margin: 4px 0 0;
       font-size: 12px;
-      opacity: 0.75;
+      opacity: 0.8;
     }
+
     #clock {
       margin-top: 8px;
       font-size: 13px;
       color: #9ad8ff;
     }
+
     .panel {
-      background: #0a1d30;
+      background: rgba(10, 29, 48, 0.84);
+      backdrop-filter: blur(8px);
       border: 1px solid #24516a;
       border-radius: 14px;
       padding: 14px;
       margin-bottom: 14px;
     }
+
     label {
       display: block;
       font-size: 13px;
       margin-bottom: 6px;
       color: #9ad8ff;
     }
-    textarea {
+
+    textarea, select, input[type="password"], input[type="text"] {
       width: 100%;
-      min-height: 80px;
       border-radius: 10px;
       border: 1px solid #2a5d7a;
-      background: #061422;
+      background: rgba(6, 20, 34, 0.92);
       color: #ffffff;
       padding: 10px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 80px;
       font-size: 15px;
       resize: vertical;
     }
+
     .row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       margin-top: 10px;
+      align-items: center;
     }
+
     button {
       border: none;
       border-radius: 10px;
@@ -110,20 +128,24 @@
       font-weight: 600;
       cursor: pointer;
     }
+
     .primary {
       background: #1ea7e1;
-      color: #04121e;
+      color: #ffffff;
     }
+
     .secondary {
       background: #14364c;
       color: #e6f1ff;
       border: 1px solid #2c6282;
     }
+
     #status {
       margin-top: 8px;
       font-size: 12px;
       color: #8fd3ff;
     }
+
     .history {
       display: flex;
       flex-direction: column;
@@ -131,6 +153,7 @@
       max-height: 340px;
       overflow-y: auto;
     }
+
     .bubble {
       padding: 10px 12px;
       border-radius: 12px;
@@ -138,29 +161,74 @@
       line-height: 1.45;
       white-space: pre-wrap;
     }
+
     .user {
-      background: #133852;
+      background: rgba(19, 56, 82, 0.9);
       align-self: flex-end;
       border: 1px solid #2b688c;
     }
+
     .jarvis {
-      background: #092438;
+      background: rgba(9, 36, 56, 0.9);
       align-self: flex-start;
       border: 1px solid #1d4c68;
     }
   </style>
 </head>
-<body><div class="video-background"></div>
+<body>
+  <div class="video-background"></div>
+
   <main>
     <header>
       <h1>J.A.R.V.I.S.</h1>
-      <p>PERSONAL AI ASSISTANT</p>
+      <p>PERSONAL AI ASSISTANT — CHAT, VOICE & VIDEO STUDIO</p>
       <div id="clock"></div>
     </header>
 
     <section class="panel">
-      <label for="command">Su'aashaada / Amarkaaga</label>
-      <textarea id="command" placeholder="Tusaale: Fur YouTube, Maxaa la yiraahdaa caasimadda Soomaaliya?"></textarea>
+      <div class="row" style="margin-top: 0; margin-bottom: 10px;">
+        <div style="flex: 1; min-width: 150px;">
+          <label for="langSelect">Luuqadda (All Languages)</label>
+          <select id="langSelect">
+            <option value="so-SO">Soomaali (so-SO)</option>
+            <option value="en-US">English — US (en-US)</option>
+            <option value="en-GB">English — UK (en-GB)</option>
+            <option value="ar-SA">العربية (ar-SA)</option>
+            <option value="fr-FR">Français (fr-FR)</option>
+            <option value="es-ES">Español (es-ES)</option>
+            <option value="de-DE">Deutsch (de-DE)</option>
+            <option value="it-IT">Italiano (it-IT)</option>
+            <option value="pt-PT">Português (pt-PT)</option>
+            <option value="ru-RU">Русский (ru-RU)</option>
+            <option value="hi-IN">हिन्दी (hi-IN)</option>
+            <option value="bn-BD">বাংলা (bn-BD)</option>
+            <option value="ur-PK">اردو (ur-PK)</option>
+            <option value="tr-TR">Türkçe (tr-TR)</option>
+            <option value="sw-KE">Kiswahili (sw-KE)</option>
+            <option value="am-ET">አማርኛ (am-ET)</option>
+            <option value="ja-JP">日本語 (ja-JP)</option>
+            <option value="ko-KR">한국어 (ko-KR)</option>
+            <option value="zh-CN">中文 — 普通话 (zh-CN)</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 150px;">
+          <label for="voicePersona">Codka (Ilmo / Gabadh / Wiil / Sidaada)</label>
+          <select id="voicePersona">
+            <option value="clone_me">Sidaada (U eg adiga)</option>
+            <option value="child">Ilmo yar</option>
+            <option value="girl">Gabadh</option>
+            <option value="boy" selected>Wiil</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="apiKeyInput">Gemini API Key (Ikhtiyaari — si uu u fekero sida Gemini/ChatGPT)</label>
+      <input type="password" id="apiKeyInput" placeholder="Ku dheji Gemini API Key halkan (waxaa lagu keydiyaa browser-kaaga oo keliya)..." />
+
+      <label for="command" style="margin-top: 10px;">Su'aashaada / Amarkaaga</label>
+      <textarea id="command" placeholder="Tusaale: Ii qor sheeko fiidyow ah, ama i weydii su'aal walba..."></textarea>
+
       <div class="row">
         <button class="primary" id="send">Dir</button>
         <button class="secondary" id="voice">Cod (Dhagayso)</button>
@@ -169,99 +237,158 @@
       <div id="status">Diyaar u ah inuu ku caawiyo.</div>
     </section>
 
+    <section class="panel" id="videoStudio">
+      <label>🎬 JARVIS Video Studio (Diyaariyaha Fiidyowga)</label>
+      <textarea id="videoPrompt" placeholder="Qor mawduuca fiidyowga: tusaale 'Sheeko dhiirrigelin ah' ama 'Sharrax kooban oo ku saabsan AI'..."></textarea>
+
+      <div class="row">
+        <button class="primary" id="generateScriptBtn">1. Diyaari Qoraalka Fiidyowga</button>
+        <button class="secondary" id="renderVideoBtn">2. Samee Fiidyowga</button>
+        <a id="downloadVideoLink" style="display:none; padding: 10px 14px; background: #16a34a; color: #ffffff; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600;" download="JARVIS-Video.webm">⬇️ Degso Fiidyowga</a>
+      </div>
+
+      <canvas id="jarvisCanvas" width="720" height="1280" style="width: 100%; max-width: 280px; margin-top: 12px; border-radius: 12px; border: 1px solid #2a5d7a; display: block;"></canvas>
+    </section>
+
     <section class="panel">
       <label>Wada-hadalka</label>
-      <div id="history" class="history"></div>
+      <div class="history" id="history"></div>
     </section>
   </main>
 
   <script>
     const $ = (id) => document.getElementById(id);
-    let lastReply = "Waan ku faraxsanahay inaan kula hadlo. Sideen kuu caawin karaa?";
+    let lastReply = "";
+
+    if ($("apiKeyInput")) {
+      $("apiKeyInput").value = localStorage.getItem("JARVIS_GEMINI_KEY") || "";
+      $("apiKeyInput").addEventListener("input", () => {
+        localStorage.setItem("JARVIS_GEMINI_KEY", $("apiKeyInput").value.trim());
+      });
+    }
 
     function updateClock() {
-      $("clock").textContent = new Date().toLocaleString();
+      const now = new Date();
+      $("clock").textContent = now.toLocaleString("so-SO");
     }
-    updateClock();
     setInterval(updateClock, 1000);
+    updateClock();
 
-    function speak(text) {
-      if (!("speechSynthesis" in window)) {
-        $("status").textContent = "Browser-kan ma taageero codka hadla.";
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "so-SO";
-      window.speechSynthesis.speak(utter);
-    }
-
-    function addMessage(role, text) {
+    function addMessage(sender, text) {
       const div = document.createElement("div");
-      div.className = "bubble " + role;
+      div.className = "bubble " + sender;
       div.textContent = text;
       $("history").appendChild(div);
       $("history").scrollTop = $("history").scrollHeight;
     }
 
-    function checkAppCommand(text) {
-      const lower = text.toLowerCase();
-      if (lower.includes("fur youtube") || lower.includes("open youtube")) {
-        window.open("https://www.youtube.com", "_blank");
-        return "Waxaan furayaa YouTube.";
-      }
-      if (lower.includes("fur google") || lower.includes("open google")) {
-        window.open("https://www.google.com", "_blank");
-        return "Waxaan furayaa Google.";
-      }
-      if (lower.includes("fur whatsapp") || lower.includes("open whatsapp")) {
-        window.open("https://wa.me/", "_blank");
-        return "Waxaan furayaa WhatsApp.";
-      }
-      return null;
+    function pickVoiceForLang(langCode, persona) {
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      if (!voices.length) return null;
+
+      const exactMatches = voices.filter(v => v.lang && v.lang.toLowerCase() === langCode.toLowerCase());
+      const langPrefix = langCode.split("-")[0].toLowerCase();
+      const prefixMatches = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langPrefix));
+      const pool = exactMatches.length ? exactMatches : (prefixMatches.length ? prefixMatches : voices);
+
+      const femaleHints = ["female", "woman", "girl", "samantha", "victoria", "zira", "aria", "salma", "fatima", "amelie", "monica", "anna", "elena", "lucia", "kyoko", "yuna", "xiaoxiao"];
+      const maleHints = ["male", "man", "boy", "daniel", "david", "guy", "alex", "tariq", "omar", "thomas", "jorge", "hans", "luca", "tiago", "dmitry", "rishi", "ahmet", "kenji", "minsu", "yunxi"];
+      const childHints = ["child", "kid", "junior", "youth", "girl", "boy"];
+
+      let hints = maleHints;
+      if (persona === "girl") hints = femaleHints;
+      else if (persona === "child") hints = childHints;
+      else if (persona === "clone_me") hints = maleHints;
+
+      const matched = pool.find(v => hints.some(h => v.name.toLowerCase().includes(h)));
+      return matched || pool[0];
     }
 
-    async function getFreeReply(text) {
-      const appMsg = checkAppCommand(text);
-      if (appMsg) return appMsg;
+    function getPersonaSettings(persona) {
+      if (persona === "child") return { pitch: 1.55, rate: 1.12, volume: 1.0 };
+      if (persona === "girl") return { pitch: 1.25, rate: 1.02, volume: 1.0 };
+      if (persona === "clone_me") return { pitch: 0.92, rate: 1.04, volume: 1.0 };
+      return { pitch: 0.88, rate: 0.98, volume: 1.0 };
+    }
 
-      const q = text.trim();
-      const lower = q.toLowerCase();
+    function speak(text) {
+      if (!text || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
 
-      if (lower.includes("waqti") || lower.includes("saacad") || lower.includes("time")) {
-        return "Waqtigu waa: " + new Date().toLocaleTimeString();
-      }
-      if (lower.includes("taariikh") || lower.includes("date")) {
-        return "Taariikhdu waa: " + new Date().toLocaleDateString();
-      }
+      const langCode = ($("langSelect") && $("langSelect").value) || "so-SO";
+      const persona = ($("voicePersona") && $("voicePersona").value) || "boy";
+      const settings = getPersonaSettings(persona);
 
-      try {
-        const url = "https://api.duckduckgo.com/?q=" + encodeURIComponent(q) + "&format=json&no_html=1";
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.AbstractText) {
-          return data.AbstractText;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = langCode;
+      utter.pitch = settings.pitch;
+      utter.rate = settings.rate;
+      utter.volume = settings.volume;
+
+      const chosenVoice = pickVoiceForLang(langCode, persona);
+      if (chosenVoice) utter.voice = chosenVoice;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+
+    async function askAI(promptText) {
+      const key = ($("apiKeyInput") && $("apiKeyInput").value.trim()) || "";
+      const lang = ($("langSelect") && $("langSelect").value) || "so-SO";
+
+      if (!key) {
+        if (/youtube/i.test(promptText)) {
+          window.open("https://www.youtube.com", "_blank");
+          return "Waan furay YouTube.";
         }
-      } catch (e) {
-        // Haddii xiriirku dib u dhaco
+        if (/google/i.test(promptText)) {
+          window.open("https://www.google.com", "_blank");
+          return "Waan furay Google.";
+        }
+        return "Waxaan ahay JARVIS. Si aan ugu jawaabo su'aalaha adag sida ChatGPT iyo Gemini, ku dheji Gemini API Key sanduuqa kore—ama taabo '1. Diyaari Qoraalka Fiidyowga' si aan kuugu sameeyo qorshe fiidyow.";
       }
 
-      return "Waan fahmay amarkaaga: \"" + q + "\". Su'aalaha guud ama furista apps-ka ayaan kaa caawin karaa.";
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`;
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `You are JARVIS, a smart, helpful AI assistant like ChatGPT and Gemini. Respond clearly in language code (${lang}). User prompt: ${promptText}`
+            }]
+          }]
+        })
+      });
+
+      const data = await res.json();
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Ma helin jawaab waafi ah, fadlan mar kale isku day.";
+      return reply;
     }
 
     async function handleCommand() {
       const text = $("command").value.trim();
       if (!text) return;
 
-      $("command").value = "";
       addMessage("user", text);
-      $("status").textContent = "JARVIS wuu ka fikirayaa...";
+      $("command").value = "";
+      $("status").textContent = "JARVIS wuxuu ka fekerayaa jawaabta...";
 
-      const reply = await getFreeReply(text);
-      lastReply = reply;
-      addMessage("jarvis", reply);
-      $("status").textContent = "Jawaabta waa la helay.";
-      speak(reply);
+      try {
+        const reply = await askAI(text);
+        lastReply = reply;
+        addMessage("jarvis", reply);
+        $("status").textContent = "Jawaabta waa diyaar.";
+        speak(reply);
+      } catch (err) {
+        const errMsg = "Khalad ayaa ka dhacay xiriirka AI.";
+        lastReply = errMsg;
+        addMessage("jarvis", errMsg);
+        $("status").textContent = errMsg;
+      }
     }
 
     $("send").addEventListener("click", handleCommand);
@@ -273,18 +400,18 @@
     });
 
     $("speakLast").addEventListener("click", () => {
-      speak(lastReply);
+      if (lastReply) speak(lastReply);
     });
 
     $("voice").addEventListener("click", () => {
       const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRec) {
-        $("status").textContent = "Browser-kan ma taageero aqoonsiga codka.";
+        $("status").textContent = "Browser-kan ma taageerayo cod-aqoonsiga.";
         return;
       }
       const rec = new SpeechRec();
-      rec.lang = "so-SO";
-      $("status").textContent = "Waan ku dhagaysanayaa... hadal.";
+      rec.lang = ($("langSelect") && $("langSelect").value) || "so-SO";
+      $("status").textContent = "Waan ku dhagaysanayaa...";
       rec.onresult = (event) => {
         const spoken = event.results[0][0].transcript;
         $("command").value = spoken;
@@ -292,12 +419,115 @@
         handleCommand();
       };
       rec.onerror = () => {
-        $("status").textContent = "Codka si fiican looma qaban, mar kale isku day.";
+        $("status").textContent = "Codka si fiican looma maqlin.";
       };
       rec.start();
     });
 
-    addMessage("jarvis", "Salaan! Waxaan ahay JARVIS. Waxaad i weydiin kartaa su'aal ama i weydiiso inaan furo YouTube, Google, ama WhatsApp.");
+    $("generateScriptBtn").addEventListener("click", async () => {
+      const topic = $("videoPrompt").value.trim();
+      if (!topic) {
+        $("status").textContent = "Fadlan qor mawduuca fiidyowga marka hore.";
+        return;
+      }
+
+      $("status").textContent = "JARVIS wuxuu diyaarinayaa qoraalka fiidyowga...";
+      const promptForVideo = `Create a short 4-scene engaging video script about: "${topic}". Keep each scene concise (1-2 sentences) so it fits on video subtitles.`;
+      const scriptText = await askAI(promptForVideo);
+
+      lastReply = scriptText;
+      $("command").value = scriptText;
+      addMessage("jarvis", "🎬 Qoraalka Fiidyowga:\n\n" + scriptText);
+      $("status").textContent = "Qoraalka fiidyowga waa diyaar! Hadda taabo '2. Samee Fiidyowga'.";
+      speak(scriptText);
+    });
+
+    $("renderVideoBtn").addEventListener("click", () => {
+      const rawText = ($("command").value.trim() || $("videoPrompt").value.trim());
+      if (!rawText) {
+        $("status").textContent = "Qor qoraal ama diyaari qoraalka fiidyowga marka hore.";
+        return;
+      }
+
+      const canvas = $("jarvisCanvas");
+      const ctx = canvas.getContext("2d");
+      const lines = rawText.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      const stream = canvas.captureStream(30);
+      const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+        const link = $("downloadVideoLink");
+        link.href = url;
+        link.style.display = "inline-block";
+        $("status").textContent = "Fiidyowgii waa diyaar! Taabo 'Degso Fiidyowga'.";
+      };
+
+      recorder.start();
+      $("status").textContent = "Fiidyowga waa la duubayaa...";
+      speak(rawText);
+
+      const framesPerLine = 90;
+      let frame = 0;
+      const totalFrames = Math.max(lines.length, 1) * framesPerLine;
+
+      const timer = setInterval(() => {
+        const idx = Math.min(Math.floor(frame / framesPerLine), lines.length - 1);
+        const currentLine = lines[idx] || rawText;
+
+        const grad = ctx.createLinearGradient(0, 0, 720, 1280);
+        grad.addColorStop(0, "#051325");
+        grad.addColorStop(1, "#0d3b66");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 720, 1280);
+
+        ctx.beginPath();
+        ctx.arc(360, 400, 105 + Math.sin(frame * 0.12) * 14, 0, Math.PI * 2);
+        ctx.strokeStyle = "#45d0ff";
+        ctx.lineWidth = 8;
+        ctx.stroke();
+
+        ctx.fillStyle = "#45d0ff";
+        ctx.font = "bold 36px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("J.A.R.V.I.S.", 360, 412);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 34px sans-serif";
+        wrapCanvasText(ctx, currentLine, 360, 680, 620, 46);
+
+        frame++;
+        if (frame >= totalFrames) {
+          clearInterval(timer);
+          recorder.stop();
+        }
+      }, 1000 / 30);
+    });
+
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(/\s+/);
+      let line = "";
+      for (let i = 0; i < words.length; i++) {
+        const testLine = line + words[i] + " ";
+        if (ctx.measureText(testLine).width > maxWidth && i > 0) {
+          ctx.fillText(line.trim(), x, y);
+          line = words[i] + " ";
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), x, y);
+    }
+
+    addMessage("jarvis", "Salaan! Waxaan ahay JARVIS. Waxaad i weydiin kartaa su'aal walba, waxaad dooran kartaa luuqad iyo cod (Ilmo yar / Gabadh / Wiil / Sidaada), waxaadna samayn kartaa fiidyow.");
   </script>
 </body>
 </html>
+
