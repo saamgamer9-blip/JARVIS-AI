@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sam Gamer - JARVIS</title>
+  <title>Sam Gamer Live</title>
   <style>
     :root {
-      --bg-overlay: rgba(10, 12, 18, 0.82);
+      --bg-overlay: rgba(10, 12, 18, 0.8);
       --text-color: #f8fafc;
       --accent-color: #38bdf8;
       --active-color: #f43f5e;
-      --speaking-color: #10b981;
     }
 
     * {
@@ -40,7 +39,7 @@
       max-width: 600px;
       text-align: center;
       padding: 15px;
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(12px);
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -82,19 +81,18 @@
       line-height: 1.5;
       font-size: 1.05rem;
       word-break: break-word;
-      white-space: pre-wrap;
     }
 
     .user {
       align-self: flex-end;
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(30, 41, 59, 0.8);
       border-bottom-right-radius: 4px;
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
     .ai {
       align-self: flex-start;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.9);
       border-bottom-left-radius: 4px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
@@ -105,14 +103,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 18px;
+      gap: 20px;
     }
 
     .key-box {
       width: 100%;
       display: flex;
       gap: 10px;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.8);
       padding: 10px;
       border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -143,6 +141,7 @@
       opacity: 0.9;
     }
 
+    /* Badhanka dhexe ee isku beddelaya */
     .action-circle {
       width: 90px;
       height: 90px;
@@ -167,9 +166,9 @@
     }
 
     .action-circle.speaking {
-      background: var(--speaking-color);
+      background: #10b981;
       color: #fff;
-      box-shadow: 0 0 50px var(--speaking-color);
+      box-shadow: 0 0 50px #10b981;
       animation: pulse 1.5s infinite;
     }
 
@@ -187,7 +186,7 @@
   </header>
 
   <main id="chatArea">
-    <div class="msg ai">Salaan! Diyaar ayaan ahay. Taabo badhanka hoose si aan u bilowno wada-hadalka JARVIS.</div>
+    <div class="msg ai">Salaan! Taabo badhanka hoose si aan u bilowno wada-hadalka.</div>
   </main>
 
   <div class="controls">
@@ -195,7 +194,7 @@
       <input type="password" id="apiKeyInput" placeholder="Geli Gemini API Key...">
       <button id="saveBtn">Save</button>
     </div>
-    <button id="mainBtn" class="action-circle" aria-label="Hadalka">🎙️</button>
+    <button id="mainBtn" class="action-circle">🎙️</button>
   </div>
 
   <script>
@@ -204,9 +203,6 @@
     const apiKeyInput = document.getElementById('apiKeyInput');
     const saveBtn = document.getElementById('saveBtn');
 
-    const SYSTEM_PROMPT = "Waxaad tahay JARVIS oo ka tirsan mashruuca Sam Gamer. Si kooban, caqli badan, oo saaxiibtinimo leh uga jawaab af Soomaali marka laguula hadlo.";
-    const conversationHistory = [];
-
     apiKeyInput.value = localStorage.getItem('sam_gamer_key') || '';
 
     function saveKey() {
@@ -214,14 +210,11 @@
       if (k) {
         localStorage.setItem('sam_gamer_key', k);
         apiKeyInput.blur();
-        addMsg('Furahaaga API waa la kaydiyay.', 'ai');
+        addMsg('Furahaaga waa la kaydiyay.', 'ai');
       }
     }
-
     saveBtn.addEventListener('click', saveKey);
-    apiKeyInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') saveKey();
-    });
+    apiKeyInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveKey(); });
 
     function addMsg(text, type) {
       const d = document.createElement('div');
@@ -229,7 +222,6 @@
       d.textContent = text;
       chatArea.appendChild(d);
       chatArea.scrollTop = chatArea.scrollHeight;
-      return d;
     }
 
     function updateButtonState(state) {
@@ -249,7 +241,6 @@
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'so-SO';
       updateButtonState('speaking');
       u.onend = () => updateButtonState('idle');
       u.onerror = () => updateButtonState('idle');
@@ -284,13 +275,8 @@
     }
 
     mainBtn.addEventListener('click', () => {
-      if (window.speechSynthesis && window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        updateButtonState('idle');
-        return;
-      }
       if (!rec) {
-        addMsg('Codka laguma taageero browser-kan.', 'ai');
+        alert('Codka laguma taageero browser-kan.');
         return;
       }
       if (recording) {
@@ -303,56 +289,24 @@
     });
 
     async function askGemini(prompt) {
-      const key = apiKeyInput.value.trim() || localStorage.getItem('sam_gamer_key') || '';
+      const key = apiKeyInput.value.trim();
       if (!key) {
-        addMsg('Fadlan geli furahaaga Gemini API marka hore kadibna riix Save.', 'ai');
+        addMsg('Fadlan geli furahaaga API marka hore.', 'ai');
         updateButtonState('idle');
         return;
       }
-
-      conversationHistory.push({
-        role: 'user',
-        parts: [{ text: prompt }]
-      });
-
-      const statusMsg = addMsg('JARVIS wuu ka fikirayaa...', 'ai');
-
       try {
-        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent', {
+        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': key
-          },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: SYSTEM_PROMPT }]
-            },
-            contents: conversationHistory
-          })
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
-
         const data = await res.json();
-
-        if (!res.ok) {
-          const apiErr = data.error?.message || 'Cillad API ayaa dhacday.';
-          statusMsg.textContent = 'Khalad: ' + apiErr;
-          conversationHistory.pop();
-          updateButtonState('idle');
-          return;
-        }
-
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Jawaab lama helin.';
-        conversationHistory.push({
-          role: 'model',
-          parts: [{ text: reply }]
-        });
-
-        statusMsg.textContent = reply;
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Khalad ayaa dhacay.';
+        addMsg(reply, 'ai');
         speak(reply);
       } catch (err) {
-        statusMsg.textContent = 'Cillad xidhiidhka internet-ka ah ayaa dhacday.';
-        conversationHistory.pop();
+        addMsg('Cillad xidhiidhka ah.', 'ai');
         updateButtonState('idle');
       }
     }
